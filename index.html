@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>FlyPuck37 | Хоккейный магазин с анимацией</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* Анимация появления при загрузке */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes shimmerText {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 5px rgba(227,30,36,0.5); }
+            50% { text-shadow: 0 0 20px rgba(227,30,36,0.8), 0 0 5px rgba(245,176,66,0.6); }
+        }
+        
+        .animate-on-load {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+        
+        .animate-scale {
+            animation: fadeInScale 0.5s ease forwards;
+            opacity: 0;
+        }
+        
+        .shimmer-text {
+            background: linear-gradient(90deg, #e31e24, #f5b042, #1e3a5f, #e31e24);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmerText 3s linear infinite;
+        }
+        
+        .shimmer-gold {
+            background: linear-gradient(90deg, #ffd700, #ffaa00, #ffd700, #ffec80);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmerText 2.5s linear infinite;
+        }
+        
+        .glow-text {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        
+        body.light {
+            --bg-page: #f4f7fc;
+            --text-main: #0a1c2f;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --navbar-bg: white;
+            --primary: #e31e24;
+            --secondary: #1e3a5f;
+            --accent: #f5b042;
+        }
+        body.dark {
+            --bg-page: #0f172a;
+            --text-main: #e2e8f0;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --navbar-bg: #0f172a;
+            --primary: #e31e24;
+            --secondary: #3b82f6;
+            --accent: #f5b042;
+        }
+        body.hockey {
+            --bg-page: #e8f4f8;
+            --text-main: #0a2f3a;
+            --card-bg: rgba(255,255,255,0.92);
+            --border: #2c9ab0;
+            --navbar-bg: rgba(8, 60, 75, 0.95);
+            --primary: #e31e24;
+            --secondary: #1e6f82;
+            --accent: #f5b042;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+        
+        .navbar { background: var(--navbar-bg); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; padding: 16px 0; }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #e31e24, #f5b042, #1e3a5f, #e31e24);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmerLogo 4s ease infinite;
+        }
+        @keyframes shimmerLogo { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .nav-actions { display: flex; gap: 20px; align-items: center; }
+        .cart-icon { position: relative; font-size: 1.6rem; cursor: pointer; }
+        .cart-count { position: absolute; top: -10px; right: -12px; background: var(--primary); color: white; font-size: 0.7rem; font-weight: bold; padding: 2px 7px; border-radius: 30px; }
+        .profile-icon { font-size: 1.6rem; cursor: pointer; color: var(--secondary); }
+        .admin-btn { background: var(--secondary); color: white; border: none; padding: 8px 18px; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        
+        .premium-card {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 40px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+            border: 1px solid rgba(255,215,0,0.3);
+            animation: fadeInUp 0.7s ease 0.1s forwards;
+            opacity: 0;
+        }
+        .premium-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700, #ffaa00, #ffd700, #ffec80);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmerLogo 3s ease infinite;
+        }
+        .premium-price { font-size: 2rem; font-weight: 800; color: #ffd700; margin: 15px 0; text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+        .premium-btn { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1e1e2f; border: none; padding: 12px 30px; border-radius: 60px; cursor: pointer; font-weight: bold; transition: transform 0.2s; }
+        .premium-btn:hover { transform: scale(1.05); }
+        
+        .wheel-section { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 48px; margin: 30px 0; overflow: hidden; animation: fadeInScale 0.6s ease 0.2s forwards; opacity: 0; }
+        .wheel-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; cursor: pointer; background: rgba(0,0,0,0.2); }
+        .wheel-header h2 { margin: 0; font-size: 1.5rem; color: var(--accent); }
+        .wheel-content { padding: 0 30px 30px 30px; transition: all 0.3s; }
+        .wheel-content.collapsed { display: none; }
+        .wheel-container { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 40px; }
+        canvas { border-radius: 50%; box-shadow: 0 0 0 8px rgba(255,215,0,0.3); transition: transform 0.3s; }
+        canvas:hover { transform: scale(1.02); }
+        .spin-btn { background: linear-gradient(135deg, #e31e24, #ff6b6b); color: white; border: none; padding: 15px 40px; font-size: 1.3rem; border-radius: 60px; cursor: pointer; transition: transform 0.2s; }
+        .spin-btn:hover { transform: scale(1.05); }
+        
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 28px; margin-top: 20px; }
+        .product-card { background: var(--card-bg); border-radius: 24px; padding: 18px; text-align: center; border: 1px solid var(--border); transition: transform 0.3s, box-shadow 0.3s; animation: fadeInScale 0.5s ease forwards; opacity: 0; }
+        .product-card:nth-child(1) { animation-delay: 0.3s; }
+        .product-card:nth-child(2) { animation-delay: 0.4s; }
+        .product-card:nth-child(3) { animation-delay: 0.5s; }
+        .product-card:nth-child(4) { animation-delay: 0.6s; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2); }
+        .product-price { font-weight: 800; font-size: 1.3rem; color: var(--secondary); margin: 8px 0; }
+        .add-to-cart { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 40px; cursor: pointer; transition: transform 0.2s; }
+        .add-to-cart:hover { transform: scale(1.02); }
+        
+        .reviews-section {
+            margin: 40px 0;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            animation: fadeInUp 0.7s ease 0.4s forwards;
+            opacity: 0;
+        }
+        .avg-rating { font-size: 1.5rem; font-weight: 800; color: #ffd700; }
+        .review-card { background: rgba(0,0,0,0.03); border-radius: 24px; padding: 18px; margin-bottom: 15px; border-left: 4px solid var(--primary); transition: transform 0.2s; }
+        .review-card:hover { transform: translateX(5px); }
+        .add-review-btn { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 40px; cursor: pointer; transition: transform 0.2s; }
+        .add-review-btn:hover { transform: scale(1.02); }
+        
+        .stats-footer {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            padding: 50px 0 30px;
+            margin-top: 50px;
+            color: white;
+        }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 30px; }
+        .facts-table, .scorers-table { width: 100%; border-collapse: collapse; background: rgba(255,255,255,0.08); border-radius: 24px; overflow: hidden; }
+        .facts-table th, .scorers-table th { background: var(--primary); color: white; padding: 15px; }
+        .facts-table td, .scorers-table td { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border-radius: 60px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border: 1px solid var(--primary);
+            cursor: pointer;
+            transition: transform 0.2s;
+            animation: fadeInUp 0.8s ease 0.8s forwards;
+            opacity: 0;
+        }
+        .music-player:hover { transform: scale(1.05); }
+        .music-player i { font-size: 1.5rem; color: var(--primary); }
+        .volume-slider { width: 80px; cursor: pointer; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 300; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; }
+        .modal-overlay.open { visibility: visible; opacity: 1; }
+        .modal-container { background: var(--card-bg); border-radius: 40px; max-width: 500px; width: 90%; padding: 32px; position: relative; }
+        .close-modal { position: absolute; top: 20px; right: 24px; font-size: 1.8rem; cursor: pointer; }
+        .cart-sidebar { position: fixed; right: -450px; top: 0; width: 450px; height: 100%; background: var(--card-bg); z-index: 201; transition: right 0.3s; padding: 24px; display: flex; flex-direction: column; }
+        .cart-sidebar.open { right: 0; }
+        .cart-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); z-index:200; visibility: hidden; opacity:0; transition:0.2s; }
+        .cart-overlay.open { visibility: visible; opacity:1; }
+        .checkout-btn { background: var(--primary); color:white; padding:12px; border-radius:40px; border:none; font-weight:bold; width:100%; margin-top: 16px; cursor: pointer; }
+        .toast-msg { position: fixed; bottom: 20px; left: 20px; background: #1e293b; color: white; padding: 10px 20px; border-radius: 40px; z-index: 400; opacity:0; transition:0.2s; }
+        .profile-info { background: rgba(0,0,0,0.05); border-radius: 24px; padding: 16px; margin-top: 16px; }
+        .theme-selector { display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap; }
+        .theme-btn { padding: 8px 20px; border-radius: 40px; border: 1px solid var(--border); background: transparent; cursor: pointer; transition: all 0.2s; }
+        .theme-btn:hover { transform: scale(1.02); }
+        .theme-btn.active { background: var(--primary); color: white; }
+        .admin-panel-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-page);
+            z-index: 500;
+            overflow-y: auto;
+            display: none;
+            padding: 20px;
+        }
+        .admin-panel-container.open { display: block; }
+        .admin-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
+        .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        .admin-table th { background: var(--primary); color: white; }
+        .admin-card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); }
+        @media (max-width:700px){ .footer-grid { grid-template-columns: 1fr; } .wheel-container { flex-direction: column; } }
+    </style>
+</head>
+<body class="light">
+
+<nav class="navbar animate-on-load" style="animation-delay: 0.05s;">
+    <div class="container nav-container">
+        <div class="logo"><i class="fas fa-hockey-puck"></i> FlyPuck37 | <span class="shimmer-text">Хоккейный магазин</span></div>
+        <div class="nav-actions">
+            <div class="cart-icon" id="cartIcon"><i class="fas fa-shopping-cart"></i><span id="cartCountBadge" class="cart-count">0</span></div>
+            <div class="profile-icon" id="profileIcon"><i class="fas fa-user-circle"></i></div>
+            <button class="admin-btn" id="openAdminBtn"><i class="fas fa-user-cog"></i> Админ</button>
+        </div>
+    </div>
+</nav>
+
+<!-- Premium карточка -->
+<div class="container">
+    <div class="premium-card">
+        <div class="premium-title">✨ FLYPUCK37 PREMIUM ✨</div>
+        <div class="premium-price shimmer-gold">350 ₽ / месяц</div>
+        <button class="premium-btn" id="buyPremiumBtn">🏆 Отправить заявку на Premium</button>
+        <div id="premiumStatus" style="margin-top: 15px;"></div>
+        <div id="premiumRequestStatus" style="margin-top: 10px; font-size:0.8rem;"></div>
+    </div>
+</div>
+
+<!-- Колесо фортуны -->
+<div class="container">
+    <div class="wheel-section">
+        <div class="wheel-header" id="wheelHeader">
+            <h2 class="shimmer-text"><i class="fas fa-gift"></i> Колесо фортуны</h2>
+            <span class="toggle-icon" id="wheelToggleIcon"><i class="fas fa-chevron-up"></i></span>
+        </div>
+        <div class="wheel-content" id="wheelContent">
+            <div class="wheel-container">
+                <canvas id="wheelCanvas" width="350" height="350"></canvas>
+                <div class="wheel-controls">
+                    <button class="spin-btn" id="spinWheelBtn">🎡 Крутить!</button>
+                    <div class="wheel-result" id="wheelResult">Нажмите на кнопку!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Магазин -->
+<div class="container">
+    <div id="productsGridContainer" class="products-grid"></div>
+</div>
+
+<!-- Отзывы -->
+<div class="container">
+    <div class="reviews-section">
+        <div class="reviews-header">
+            <div>
+                <h3 class="shimmer-text"><i class="fas fa-star" style="color: #ffd700;"></i> Отзывы покупателей</h3>
+                <div class="avg-rating" id="avgRatingDisplay">⭐ 0.0</div>
+            </div>
+            <button class="add-review-btn" id="addReviewBtn"><i class="fas fa-pen"></i> Оставить отзыв</button>
+        </div>
+        <div id="reviewsList"></div>
+    </div>
+</div>
+
+<!-- Модалки -->
+<div id="authModal" class="modal-overlay"><div class="modal-container"><button class="close-modal" id="closeAuthModal">&times;</button><div id="authContent"></div></div></div>
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header"><span class="shimmer-text">Корзина</span><button id="closeCartBtn" style="background:none;border:none;font-size:1.8rem;">&times;</button></div>
+    <div class="cart-items" id="cartItemsList"></div>
+    <div class="cart-total" id="cartTotalPrice"></div>
+    <button class="checkout-btn" id="checkoutBtn">Оформить заказ</button>
+</div>
+<div class="toast-msg" id="toastMsg"></div>
+
+<!-- Футер -->
+<footer class="stats-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <h3 class="shimmer-text" style="margin-bottom: 15px;"><i class="fas fa-lightbulb"></i> Интересные факты о хоккее</h3>
+                <table class="facts-table" id="factsTable">
+                    <thead><tr><th>#</th><th>Факт</th></tr></thead>
+                    <tbody id="factsTableBody"></tbody>
+                </table>
+            </div>
+            <div>
+                <h3 class="shimmer-text" style="margin-bottom: 15px;"><i class="fas fa-trophy"></i> Топ-10 бомбардиров НХЛ</h3>
+                <table class="scorers-table" id="scorersTable">
+                    <thead><tr><th>#</th><th>Игрок</th><th>Очки</th><th>Голы+Пасы</th></tr></thead>
+                    <tbody id="scorersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="update-badge" id="updateBadge" style="text-align:right; font-size:0.7rem; margin-top:15px;">🔄 Данные обновлены: загрузка...</div>
+        <div style="text-align: center; margin-top: 30px;">© 2025 FlyPuck37 — <span class="shimmer-text">«Трус не играет в хоккей»</span> играет фоном 🎵</div>
+    </div>
+</footer>
+
+<!-- Музыкальный плеер -->
+<div class="music-player" id="musicPlayer">
+    <i class="fas fa-music" id="musicIcon"></i>
+    <span id="musicText" class="shimmer-text">🎵 Трус не играет в хоккей</span>
+    <i class="fas fa-volume-up"></i>
+    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="0.3">
+</div>
+
+<script>
+    // ========== МУЗЫКА ==========
+    const audio = new Audio();
+    audio.src = 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=hockey-anthem-123.mp3';
+    audio.loop = true;
+    audio.volume = 0.3;
+    let isMusicPlaying = false;
+    const musicPlayer = document.getElementById('musicPlayer');
+    const musicIcon = document.getElementById('musicIcon');
+    const musicText = document.getElementById('musicText');
+    const volumeSlider = document.getElementById('volumeSlider');
+    function playMusic() {
+        audio.play().then(() => {
+            isMusicPlaying = true;
+            musicIcon.className = 'fas fa-music';
+            musicText.innerHTML = '🎵 Трус не играет в хоккей ♪';
+        }).catch(() => {});
+    }
+    function toggleMusic() {
+        if(isMusicPlaying) { audio.pause(); isMusicPlaying = false; musicIcon.className = 'fas fa-play'; musicText.innerHTML = '🎵 Включить музыку'; }
+        else playMusic();
+    }
+    musicPlayer.addEventListener('click', (e) => { if(e.target !== volumeSlider) toggleMusic(); });
+    volumeSlider.addEventListener('input', (e) => { audio.volume = parseFloat(e.target.value); });
+    document.body.addEventListener('click', function firstClick() { if(!isMusicPlaying) playMusic(); document.body.removeEventListener('click', firstClick); }, { once: true });
+    
+    // ========== ОСНОВНАЯ ЛОГИКА ==========
+    let products = [], users = [], orders = [], cart = [], currentUserId = null, tempCodeStore = {};
+    let isPremium = false, premiumExpiry = null, premiumDiscountPercent = 8;
+    let currentTheme = localStorage.getItem('flypuck_theme') || 'light';
+    let premiumRequests = [];
+    let reviews = [];
+    
+    function loadData() {
+        products = JSON.parse(localStorage.getItem('flypuck_products') || '[{"id":1,"name":"Клюшка CCM Ribcor","price":12990,"image":"🏒"},{"id":2,"name":"Коньки Bauer Supreme","price":22990,"image":"⛸️"},{"id":3,"name":"Шлем CCM Tacks","price":8990,"image":"⛑️"},{"id":4,"name":"Свитер сборной России","price":5990,"image":"🇷🇺"}]');
+        users = JSON.parse(localStorage.getItem('flypuck_users') || '[]');
+        orders = JSON.parse(localStorage.getItem('flypuck_orders') || '[]');
+        premiumRequests = JSON.parse(localStorage.getItem('flypuck_premium_requests') || '[]');
+        reviews = JSON.parse(localStorage.getItem('flypuck_reviews') || '[]');
+        const prem = localStorage.getItem('flypuck_premium');
+        if(prem) { const d=JSON.parse(prem); if(d.active && d.expiry>Date.now()) { isPremium=true; premiumExpiry=d.expiry; } else localStorage.removeItem('flypuck_premium'); }
+        premiumDiscountPercent = parseInt(localStorage.getItem('flypuck_premium_discount') || '8');
+    }
+    function saveAll() { 
+        localStorage.setItem('flypuck_products', JSON.stringify(products)); 
+        localStorage.setItem('flypuck_users', JSON.stringify(users)); 
+        localStorage.setItem('flypuck_orders', JSON.stringify(orders));
+        localStorage.setItem('flypuck_premium_requests', JSON.stringify(premiumRequests));
+        localStorage.setItem('flypuck_reviews', JSON.stringify(reviews));
+    }
+    function applyTheme(theme) { document.body.className = theme; localStorage.setItem('flypuck_theme', theme); currentTheme = theme; }
+    
+    // Колесо фортуны
+    const wheelCanvas = document.getElementById('wheelCanvas');
+    const ctx = wheelCanvas.getContext('2d');
+    let currentAngle = 0, spinning = false;
+    function getSectors() {
+        return isPremium ? 
+            [{name:"НИЧЕГО",percent:40,prize:0,color:"#4a5568"},{name:"50₽",percent:30,prize:50,color:"#3b82f6"},{name:"100₽",percent:20,prize:100,color:"#f59e0b"},{name:"300₽",percent:10,prize:300,color:"#ef4444"}]:
+            [{name:"НИЧЕГО",percent:70,prize:0,color:"#4a5568"},{name:"50₽",percent:20,prize:50,color:"#3b82f6"},{name:"100₽",percent:7,prize:100,color:"#f59e0b"},{name:"300₽",percent:3,prize:300,color:"#ef4444"}];
+    }
+    function drawWheel() {
+        const sectors = getSectors();
+        const size=350, cx=size/2, cy=size/2, r=size/2-8;
+        wheelCanvas.width=size; wheelCanvas.height=size;
+        let start=currentAngle;
+        sectors.forEach(s=>{ const angle=s.percent/100*Math.PI*2, end=start+angle;
+            ctx.beginPath(); ctx.fillStyle=s.color; ctx.moveTo(cx,cy); ctx.arc(cx,cy,r,start,end); ctx.fill();
+            ctx.save(); ctx.translate(cx,cy); ctx.rotate(start+angle/2); ctx.fillStyle="white"; ctx.font="bold 12px Arial"; ctx.fillText(s.name, r*0.65, 6); ctx.restore();
+            start=end;
+        });
+        ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2); ctx.fillStyle="#1e293b"; ctx.fill(); ctx.fillStyle="#f5b042"; ctx.font="bold 18px Arial"; ctx.fillText("🎯", cx-8, cy+6);
+    }
+    function spinWheel() { 
+        if(spinning) return; 
+        spinning=true; 
+        const sectors = getSectors();
+        const targetAngle=currentAngle+Math.PI*2*(6+Math.random()*6); 
+        const start=performance.now(); const dur=2500;
+        function anim(now){ 
+            const p=Math.min(1,(now-start)/dur); 
+            const ease=1-Math.pow(1-p,3.5); 
+            currentAngle=(currentAngle+(targetAngle-currentAngle)*ease)%(Math.PI*2); 
+            drawWheel();
+            if(p<1) requestAnimationFrame(anim); 
+            else { 
+                let cum=0; let won=null; 
+                sectors.forEach(s=>{ const a=s.percent/100*Math.PI*2; if(currentAngle>=cum && currentAngle<cum+a) won=s; cum+=a; });
+                if(won && won.prize>0){ 
+                    let b=parseInt(localStorage.getItem('flypuck_bonus')||'0'); 
+                    b+=won.prize; 
+                    localStorage.setItem('flypuck_bonus',b); 
+                    document.getElementById('wheelResult').innerHTML=`🎉 Вы выиграли ${won.prize}₽ бонусов!`; 
+                    showToast(`+${won.prize}₽ бонусов!`); 
+                } else document.getElementById('wheelResult').innerHTML=`😔 Ничего не выпало`; 
+                spinning=false; 
+                cancelAnimationFrame(anim); 
+            }
+        } 
+        requestAnimationFrame(anim);
+    }
+    document.getElementById('spinWheelBtn').addEventListener('click', spinWheel);
+    drawWheel();
+    function getBonus(){ return parseInt(localStorage.getItem('flypuck_bonus')||'0'); }
+    
+    // Магазин
+    function renderShop() {
+        const container = document.getElementById('productsGridContainer');
+        if(container) container.innerHTML = products.map(p => `
+            <div class="product-card">
+                <div style="font-size:3rem;">${p.image}</div>
+                <div class="product-title shimmer-text">${p.name}</div>
+                <div class="product-price">${p.price.toLocaleString()} ₽</div>
+                <button class="add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">В корзину</button>
+            </div>
+        `).join('');
+        document.querySelectorAll('.add-to-cart').forEach(btn=>btn.addEventListener('click',()=>addToCart(parseInt(btn.dataset.id),btn.dataset.name,parseInt(btn.dataset.price))));
+    }
+    function addToCart(id,name,price){ let ex=cart.find(i=>i.id===id); if(ex) ex.quantity++; else cart.push({id,name,price,quantity:1}); updateCartUI(); showToast(`✓ ${name} в корзине`); }
+    function updateCartUI(){ const count=cart.reduce((s,i)=>s+i.quantity,0); document.getElementById('cartCountBadge').innerText=count; const cd=document.getElementById('cartItemsList'); if(!cart.length){ cd.innerHTML='Корзина пуста'; document.getElementById('cartTotalPrice').innerHTML='Итого: 0 ₽'; return; } cd.innerHTML=cart.map(i=>`<div class="cart-item"><div><b>${i.name}</b><br>${i.price}₽ x ${i.quantity}</div><div>${i.price*i.quantity}₽ <button class="cart-item-remove" data-id="${i.id}"><i class="fas fa-trash"></i></button></div></div>`).join(''); document.getElementById('cartTotalPrice').innerHTML=`Итого: ${cart.reduce((s,i)=>s+i.price*i.quantity,0)} ₽`; document.querySelectorAll('.cart-item-remove').forEach(btn=>btn.addEventListener('click',()=>{ const id=parseInt(btn.dataset.id); const idx=cart.findIndex(i=>i.id===id); if(idx!==-1){ if(cart[idx].quantity>1) cart[idx].quantity--; else cart.splice(idx,1); updateCartUI(); } })); }
+    function showToast(msg){ const t=document.getElementById('toastMsg'); t.innerText=msg; t.style.opacity='1'; setTimeout(()=>t.style.opacity='0',2000); }
+    
+    document.getElementById('checkoutBtn').addEventListener('click',()=>{
+        if(!cart.length){ showToast("Корзина пуста"); return; }
+        if(!currentUserId){ showToast("Войдите в профиль"); document.getElementById('authModal').classList.add('open'); renderAuthModal(); return; }
+        let total = cart.reduce((s,i)=>s+i.price*i.quantity,0);
+        if(isPremium){ let disc=Math.floor(total*premiumDiscountPercent/100); total-=disc; showToast(`✨ Premium скидка ${premiumDiscountPercent}%: -${disc}₽`); }
+        let bonus=getBonus(), bonusApplied=0;
+        if(bonus>0 && total>0){ bonusApplied=Math.min(bonus,total); total-=bonusApplied; localStorage.setItem('flypuck_bonus',bonus-bonusApplied); showToast(`✅ Бонус -${bonusApplied}₽`); }
+        orders.push({id:orders.length+1, userId:currentUserId, date:new Date().toLocaleString(), total:total, items:cart.map(i=>({name:i.name,quantity:i.quantity}))});
+        localStorage.setItem('flypuck_orders',JSON.stringify(orders));
+        alert(`Заказ оформлен!\nСумма: ${total}₽`); cart=[]; updateCartUI(); closeCart();
+    });
+    
+    // Пользователи
+    function renderAuthModal() {
+        const container=document.getElementById('authContent');
+        if(currentUserId){
+            const user=users.find(u=>u.id===currentUserId);
+            if(user){
+                container.innerHTML=`<h3 class="shimmer-text">Профиль</h3><div class="profile-info"><strong>${user.name}</strong><br>${user.phone}<br>Бонус: ${getBonus()}₽<br>Premium: ${isPremium?'Активен':'Не активен'}</div><div class="theme-selector"><button class="theme-btn ${currentTheme==='light'?'active':''}" data-theme="light">🌞 Светлая</button><button class="theme-btn ${currentTheme==='dark'?'active':''}" data-theme="dark">🌙 Тёмная</button><button class="theme-btn ${currentTheme==='hockey'?'active':''}" data-theme="hockey">🏒 Хоккейная</button></div><button id="logoutBtn" class="btn-primary">Выйти</button>`;
+                document.querySelectorAll('.theme-btn').forEach(btn=>btn.addEventListener('click',()=>applyTheme(btn.dataset.theme)));
+                document.getElementById('logoutBtn').onclick=()=>{ currentUserId=null; localStorage.removeItem('flypuck_currentUserId'); renderAuthModal(); updateCartUI(); showToast("Вы вышли"); document.getElementById('authModal').classList.remove('open'); };
+                return;
+            }
+        }
+        container.innerHTML=`<h3 class="shimmer-text">Вход</h3><div class="form-group"><input id="regPhone" placeholder="Телефон"></div><div class="form-group"><input id="regName" placeholder="Имя"></div><div class="form-group"><input id="regCode" placeholder="Код"><button id="sendCodeBtn" class="btn-primary">Отправить код</button></div><button id="verifyCodeBtn" class="btn-primary">Войти</button><p style="margin-top:10px; font-size:0.7rem;">Демо-код: 123456</p>`;
+        document.getElementById('sendCodeBtn').onclick=()=>{ const p=document.getElementById('regPhone').value.trim(); if(p){ tempCodeStore[p]='123456'; showToast(`Код: 123456`); } };
+        document.getElementById('verifyCodeBtn').onclick=()=>{ const phone=document.getElementById('regPhone').value.trim(), name=document.getElementById('regName').value.trim(), code=document.getElementById('regCode').value.trim(); if(code!=='123456'){ showToast("Неверный код"); return; } let user=users.find(u=>u.phone===phone); if(!user){ user={id:users.length+1,phone,name:name||"Пользователь",orders:[]}; users.push(user); saveAll(); } currentUserId=user.id; localStorage.setItem('flypuck_currentUserId',currentUserId); renderAuthModal(); document.getElementById('authModal').classList.remove('open'); updateCartUI(); };
+    }
+    
+    function sendPremiumRequest() {
+        if(!currentUserId){ showToast("Сначала войдите"); document.getElementById('authModal').classList.add('open'); renderAuthModal(); return; }
+        if(isPremium){ showToast("Premium уже активна!"); return; }
+        const user = users.find(u=>u.id===currentUserId);
+        if(premiumRequests.find(r=>r.userId===currentUserId && r.status==='pending')) { showToast("Заявка уже отправлена!"); return; }
+        premiumRequests.push({id:premiumRequests.length+1, userId:currentUserId, userName:user.name, phone:user.phone, date:new Date().toLocaleString(), status:'pending'});
+        saveAll();
+        showToast("✅ Заявка отправлена администратору!");
+        updatePremiumRequestStatus();
+    }
+    function updatePremiumRequestStatus() {
+        const req = premiumRequests.find(r=>r.userId===currentUserId && r.status==='pending');
+        document.getElementById('premiumRequestStatus').innerHTML = req ? `<div style="background:rgba(255,215,0,0.2); padding:8px; border-radius:40px;">⏳ Заявка отправлена ${req.date}. Ожидайте!</div>` : '';
+    }
+    document.getElementById('buyPremiumBtn').addEventListener('click', sendPremiumRequest);
+    
+    function renderReviews() {
+        const container = document.getElementById('reviewsList');
+        if(reviews.length===0) { container.innerHTML='<div style="text-align:center; padding:40px;">Пока нет отзывов</div>'; document.getElementById('avgRatingDisplay').innerHTML='⭐ 0.0'; return; }
+        let total=0; reviews.forEach(r=>total+=r.rating);
+        document.getElementById('avgRatingDisplay').innerHTML=`⭐ ${(total/reviews.length).toFixed(1)} (${reviews.length})`;
+        container.innerHTML = [...reviews].reverse().map(r=>`<div class="review-card"><div class="review-author"><strong>${r.userName}</strong><div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div></div><div class="review-text">${r.text}</div><div class="review-date">${r.date}</div></div>`).join('');
+    }
+    function addReview(rating,text){ if(!currentUserId){ showToast("Войдите"); return; } const user=users.find(u=>u.id===currentUserId); reviews.push({id:reviews.length+1, userId:currentUserId, userName:user.name, rating, text, date:new Date().toLocaleString()}); saveAll(); renderReviews(); showToast("Спасибо за отзыв!"); }
+    document.getElementById('addReviewBtn').addEventListener('click',()=>{ if(!currentUserId){ showToast("Войдите"); document.getElementById('authModal').classList.add('open'); renderAuthModal(); return; } const r=parseInt(prompt("Оценка (1-5):","5")); if(r>=1&&r<=5){ const t=prompt("Ваш отзыв:"); if(t) addReview(r,t); } });
+    
+    const hockeyFacts = ["Самая быстрая шайба: 183 км/ч","Первый матч: 1875","Монреаль: 24 Кубка Стэнли","Овечкин: 850+ голов","Гретцки: 2857 очков","Хоккей — спорт Канады","Макдэвид: 45 км/ч","Шайба весит 170 г"];
+    const nhlScorers = [{name:"Гретцки",points:2857,goals:894,assists:1963,team:"Эдмонтон"},{name:"Ягр",points:1921,goals:766,assists:1155,team:"Питтсбург"},{name:"Мессье",points:1887,goals:694,assists:1193,team:"Эдмонтон"},{name:"Хоу",points:1850,goals:801,assists:1049,team:"Детройт"},{name:"Фрэнсис",points:1798,goals:549,assists:1249,team:"Питтсбург"},{name:"Лемье",points:1723,goals:690,assists:1033,team:"Питтсбург"},{name:"Айзерман",points:1755,goals:692,assists:1063,team:"Детройт"},{name:"Овечкин",points:1550,goals:853,assists:697,team:"Вашингтон"},{name:"Кросби",points:1520,goals:555,assists:965,team:"Питтсбург"},{name:"Эспозито",points:1590,goals:717,assists:873,team:"Бостон"}];
+    function updateTables() {
+        const facts = [...hockeyFacts].sort(()=>0.5-Math.random()).slice(0,8);
+        document.getElementById('factsTableBody').innerHTML = facts.map((f,i)=>`<tr><td class="fact-number">${i+1}<td><i class="fas fa-hockey-puck" style="color:var(--accent); margin-right:8px;"></i>${f}</tr>`).join('');
+        const scorers = [...nhlScorers].sort(()=>0.5-Math.random()).slice(0,10).sort((a,b)=>b.points-a.points);
+        document.getElementById('scorersTableBody').innerHTML = scorers.map((s,i)=>`<tr><td class="scorer-rank">${i+1}<td><strong>${s.name}</strong><br><span style="font-size:0.7rem;">${s.team}</span><td style="color:#ffd700;">${s.points}<td style="font-size:0.8rem;">${s.goals}+${s.assists}<tr>`).join('');
+        document.getElementById('updateBadge').innerHTML = `🔄 Данные обновлены: ${new Date().toLocaleString()}`;
+    }
+    setInterval(updateTables, 3600000);
+    
+    // ========== АДМИН-ПАНЕЛЬ ==========
+    const adminPanelContainer = document.createElement('div');
+    adminPanelContainer.className = 'admin-panel-container';
+    adminPanelContainer.id = 'adminPanelContainer';
+    document.body.appendChild(adminPanelContainer);
+    
+    function renderAdminPanel() {
+        adminPanelContainer.innerHTML = `
+            <div class="container">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                    <h1 class="shimmer-text">👑 Админ-панель FlyPuck37</h1>
+                    <button id="closeAdminPanelBtn" class="admin-btn" style="background:#ef4444;">✕ Закрыть</button>
+                </div>
+                <div class="admin-card">
+                    <h3 class="shimmer-text">➕ Добавление товара</h3>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:15px;">
+                        <input type="text" id="newProdName" placeholder="Название товара" style="flex:2; padding:12px; border-radius:40px; border:1px solid var(--border);">
+                        <input type="number" id="newProdPrice" placeholder="Цена (₽)" style="flex:1; padding:12px; border-radius:40px; border:1px solid var(--border);">
+                        <input type="text" id="newProdImage" placeholder="Эмодзи (🏒)" style="flex:0.5; padding:12px; border-radius:40px; border:1px solid var(--border);" value="🏒">
+                        <button id="addProductAdminBtn" class="admin-btn" style="background:#22c55e;">➕ Добавить товар</button>
+                    </div>
+                </div>
+                <div class="admin-card"><h3 class="shimmer-text">📦 Управление товарами</h3><table class="admin-table"><thead><tr><th>ID</th><th>Иконка</th><th>Название</th><th>Цена</th><th>Действия</th></tr></thead><tbody id="adminProductsTable"></tbody></table></div>
+                <div class="admin-card"><h3 class="shimmer-text">📋 Заявки на Premium (${premiumRequests.filter(r=>r.status==='pending').length})</h3><div id="adminRequestsList"></div></div>
+                <div class="admin-card"><h3 class="shimmer-text">👥 Пользователи (${users.length})</h3><div id="adminUsersList" style="max-height:300px; overflow-y:auto;"></div></div>
+                <div class="admin-card"><h3 class="shimmer-text">📦 Заказы (${orders.length})</h3><div id="adminOrdersList" style="max-height:300px; overflow-y:auto;"></div></div>
+                <div class="admin-card"><h3 class="shimmer-text">⭐ Отзывы (${reviews.length})</h3><div id="adminReviewsList" style="max-height:300px; overflow-y:auto;"></div></div>
+                <div class="admin-card"><h3 class="shimmer-text">⚙️ Настройки</h3><label>Скидка Premium (%): </label><input type="number" id="adminDiscountInput" value="${premiumDiscountPercent}" style="width:100px; padding:8px; border-radius:40px; margin:0 10px;"><button id="saveDiscountBtn" class="admin-btn">💾 Сохранить</button><button id="resetDataBtn" class="admin-btn" style="background:#ef4444; margin-left:10px;">🗑️ Сбросить БД</button></div>
+            </div>
+        `;
+        document.getElementById('adminProductsTable').innerHTML = products.map(p => `<tr><td>${p.id}<td style="font-size:1.5rem;">${p.image}<td>${p.name}<td>${p.price}₽<td><button onclick="deleteProductAdmin(${p.id})" style="background:#ef4444; color:white; border:none; padding:5px 12px; border-radius:20px; cursor:pointer;">🗑️ Удалить</button></tr>`).join('');
+        const pending = premiumRequests.filter(r=>r.status==='pending');
+        document.getElementById('adminRequestsList').innerHTML = pending.length ? pending.map(r => `<div style="background:var(--bg-page); padding:12px; border-radius:20px; margin-bottom:10px;"><strong>${r.userName}</strong> (${r.phone})<br>${r.date}<br><button onclick="approvePremium(${r.userId})" style="background:#22c55e; color:white; border:none; padding:5px 15px; border-radius:20px;">✅ Подтвердить оплату</button><button onclick="rejectPremium(${r.userId})" style="background:#ef4444; color:white; border:none; padding:5px 15px; border-radius:20px;">❌ Отклонить</button></div>`).join('') : '<p>Нет активных заявок</p>';
+        document.getElementById('adminUsersList').innerHTML = users.map(u => `<div style="border-bottom:1px solid var(--border); padding:8px;"><strong>${u.name}</strong> (${u.phone}) | Заказов: ${u.orders?.length||0}</div>`).join('');
+        document.getElementById('adminOrdersList').innerHTML = orders.slice(-20).reverse().map(o => `<div style="border-bottom:1px solid var(--border); padding:8px;">Заказ #${o.id} | ${o.date} | ${o.total}₽ | ${o.items?.map(i=>i.name).join(', ')||''}</div>`).join('');
+        document.getElementById('adminReviewsList').innerHTML = reviews.slice(-20).reverse().map(r => `<div style="border-bottom:1px solid var(--border); padding:8px;"><strong>${r.userName}</strong> ${'★'.repeat(r.rating)}: ${r.text}<br><span style="font-size:0.7rem;">${r.date}</span></div>`).join('');
+        document.getElementById('closeAdminPanelBtn').onclick = () => adminPanelContainer.classList.remove('open');
+        document.getElementById('addProductAdminBtn').onclick = () => {
+            const name = document.getElementById('newProdName').value.trim();
+            const price = parseInt(document.getElementById('newProdPrice').value);
+            const image = document.getElementById('newProdImage').value.trim() || "🏒";
+            if(name && price) { products.push({id:products.length+1, name, price, image}); saveAll(); renderShop(); renderAdminPanel(); showToast("Товар добавлен"); document.getElementById('newProdName').value = ''; document.getElementById('newProdPrice').value = ''; }
+            else showToast("Заполните название и цену");
+        };
+        document.getElementById('saveDiscountBtn').onclick = () => { const newDisc = parseInt(document.getElementById('adminDiscountInput').value); if(newDisc>=0 && newDisc<=50) { premiumDiscountPercent=newDisc; localStorage.setItem('flypuck_premium_discount',premiumDiscountPercent); showToast("Скидка Premium сохранена"); } };
+        document.getElementById('resetDataBtn').onclick = () => { if(confirm("Сбросить все данные?")) { localStorage.clear(); location.reload(); } };
+    }
+    window.deleteProductAdmin = (id) => { products = products.filter(p=>p.id!==id); saveAll(); renderShop(); renderAdminPanel(); showToast("Товар удалён"); };
+    window.approvePremium = (userId) => { const req = premiumRequests.find(r=>r.userId===userId && r.status==='pending'); if(req) { req.status='approved'; saveAll(); if(userId===currentUserId) { localStorage.setItem('flypuck_premium',JSON.stringify({active:true,expiry:Date.now()+30*24*60*60*1000})); location.reload(); } else { showToast("Premium активирован"); renderAdminPanel(); } } };
+    window.rejectPremium = (userId) => { const idx = premiumRequests.findIndex(r=>r.userId===userId && r.status==='pending'); if(idx!==-1){ premiumRequests.splice(idx,1); saveAll(); renderAdminPanel(); showToast("Заявка отклонена"); } };
+    document.getElementById('openAdminBtn').onclick = () => { const pwd = prompt("Введите пароль администратора:"); if(pwd === "9797") { renderAdminPanel(); adminPanelContainer.classList.add('open'); } else alert("Неверный пароль!"); };
+    
+    // Корзина UI
+    const cartIcon=document.getElementById('cartIcon'), cartSidebar=document.getElementById('cartSidebar'), cartOverlay=document.getElementById('cartOverlay'), closeCartBtn=document.getElementById('closeCartBtn');
+    function openCart(){ cartSidebar.classList.add('open'); cartOverlay.classList.add('open'); }
+    function closeCart(){ cartSidebar.classList.remove('open'); cartOverlay.classList.remove('open'); }
+    cartIcon.onclick=openCart; closeCartBtn.onclick=closeCart; cartOverlay.onclick=closeCart;
+    const profileIcon=document.getElementById('profileIcon'), authModal=document.getElementById('authModal'), closeAuth=document.getElementById('closeAuthModal');
+    profileIcon.onclick=()=>{ renderAuthModal(); authModal.classList.add('open'); };
+    closeAuth.onclick=()=>authModal.classList.remove('open');
+    authModal.onclick=(e)=>{ if(e.target===authModal) authModal.classList.remove('open'); };
+    
+    let wheelCollapsed = localStorage.getItem('flypuck_wheel_collapsed') === 'true';
+    document.getElementById('wheelHeader').onclick=()=>{ wheelCollapsed=!wheelCollapsed; document.getElementById('wheelContent').classList.toggle('collapsed',wheelCollapsed); document.getElementById('wheelToggleIcon').innerHTML=wheelCollapsed?'<i class="fas fa-chevron-down"></i>':'<i class="fas fa-chevron-up"></i>'; localStorage.setItem('flypuck_wheel_collapsed',wheelCollapsed); };
+    if(wheelCollapsed){ document.getElementById('wheelContent').classList.add('collapsed'); document.getElementById('wheelToggleIcon').innerHTML='<i class="fas fa-chevron-down"></i>'; }
+    
+    loadData(); renderShop(); updateCartUI(); applyTheme(currentTheme); updateTables(); renderReviews();
+    const savedId = localStorage.getItem('flypuck_currentUserId');
+    if(savedId){ currentUserId = parseInt(savedId); if(users.find(u=>u.id===currentUserId)) { renderAuthModal(); updatePremiumRequestStatus(); } }
+    if(isPremium) document.getElementById('premiumStatus').innerHTML = `<div style="background:rgba(255,215,0,0.2); border-radius:60px; padding:10px;">⭐ PREMIUM АКТИВЕН до ${new Date(premiumExpiry).toLocaleDateString()} ⭐<br>💰 Скидка ${premiumDiscountPercent}%!</div>`;
+</script>
+</body>
+</html>
