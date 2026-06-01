@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>FlyPuck37 | Хоккейная тема + товары от админа</title>
+    <title>FlyPuck37 | Хоккейная тема + цензурный бот</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -12,6 +12,7 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shimmerText { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
         @keyframes floatStickers { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } 100% { transform: translateY(0) rotate(0deg); } }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } 100% { transform: translateX(0); } }
         
         .shimmer-text {
             background: linear-gradient(90deg, #e31e24, #f5b042, #1e3a5f, #e31e24);
@@ -165,7 +166,7 @@
         
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 300; display: flex; align-items: center; justify-content: center; visibility: hidden; opacity: 0; transition: 0.2s; }
         .modal-overlay.open { visibility: visible; opacity: 1; }
-        .modal-container { background: var(--card-bg); border-radius: 40px; max-width: 500px; width: 90%; padding: 32px; position: relative; backdrop-filter: blur(10px); }
+        .modal-container { background: var(--card-bg); border-radius: 40px; max-width: 550px; width: 90%; padding: 32px; position: relative; backdrop-filter: blur(10px); max-height: 90vh; overflow-y: auto; }
         .close-modal { position: absolute; top: 20px; right: 24px; font-size: 1.8rem; cursor: pointer; }
         .cart-sidebar { position: fixed; right: -450px; top: 0; width: 450px; height: 100%; background: var(--card-bg); z-index: 201; transition: right 0.3s; padding: 24px; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
         .cart-sidebar.open { right: 0; }
@@ -173,10 +174,17 @@
         .cart-overlay.open { visibility: visible; opacity:1; }
         .contact-admin-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 12px; border-radius: 40px; border: none; font-weight: bold; width: 100%; margin-top: 16px; cursor: pointer; }
         .toast-msg { position: fixed; bottom: 20px; left: 20px; background: #1e293b; color: white; padding: 10px 20px; border-radius: 40px; z-index: 400; opacity:0; transition:0.2s; }
+        .toast-error { background: #dc2626; }
         .profile-info { background: rgba(0,0,0,0.05); border-radius: 24px; padding: 16px; margin-top: 16px; }
+        .site-info { background: linear-gradient(135deg, rgba(227,30,36,0.08), rgba(245,176,66,0.08)); border-radius: 24px; padding: 20px; margin-top: 20px; border: 1px solid var(--primary); }
+        .site-info h4 { color: var(--primary); margin-bottom: 12px; }
+        .site-info ul { list-style: none; padding-left: 0; }
+        .site-info li { margin: 8px 0; display: flex; align-items: center; gap: 10px; }
         .theme-selector { display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap; }
         .theme-btn { padding: 8px 20px; border-radius: 40px; border: 1px solid var(--border); background: transparent; cursor: pointer; }
         .theme-btn.active { background: var(--primary); color: white; }
+        .warning-text { color: #f97316; font-weight: bold; }
+        .censored-block { animation: shake 0.3s ease-in-out; background: rgba(220,38,38,0.2); border: 1px solid #ef4444; border-radius: 12px; padding: 10px; margin-top: 10px; }
         
         .admin-panel-container {
             position: fixed;
@@ -199,7 +207,9 @@
         .draw-btn { background: #8b5cf6; color: white; }
         .btn-primary { background: var(--primary); color: white; padding: 8px 16px; border-radius: 40px; border: none; cursor: pointer; }
         input, select { padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg-page); color: var(--text-main); }
-        @media (max-width:700px){ .subscriptions { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; } .nav-menu { display: none; } }
+        .bot-status { font-size: 0.8rem; margin-top: 5px; padding: 5px 10px; border-radius: 30px; display: inline-block; }
+        .bot-active { background: #22c55e20; color: #22c55e; border: 1px solid #22c55e; }
+        @media (max-width:700px){ .subscriptions { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; } .nav-menu { display: none; } .modal-container { width: 95%; } }
     </style>
 </head>
 <body class="light">
@@ -315,14 +325,46 @@
     volumeSlider.addEventListener('input', (e) => { audio.volume = parseFloat(e.target.value); });
     document.body.addEventListener('click', function firstClick() { if(!isMusicPlaying) playMusic(); document.body.removeEventListener('click', firstClick); }, { once: true });
     
-    // Глобальные данные - все товары видны каждому пользователю
+    // ========== ЦЕНЗУРНЫЙ БОТ ==========
+    // Список запрещённых слов (нецензурная брань и оскорбления)
+    const forbiddenWords = [
+        "хуй", "пизда", "блядь", "ебан", "ебат", "хер", "говно", "долбо", "пидор", "мудак", 
+        "сука", "залупа", "манда", "шлюха", "курва", "бздюх", "жопа", "срака", "уебок", "уебище",
+        "хуесос", "пиздюк", "ебучий", "нахрен", "охренеть", "хрень", "фигня", "дерьмо", "сволочь",
+        "тварь", "редиска", "козел", "баран", "осел", "идиот", "дебил", "кретин", "имбицил",
+        "fuck", "shit", "bitch", "cunt", "dick", "asshole", "bastard"
+    ];
+    
+    function checkProfanity(text) {
+        if (!text) return false;
+        const lowerText = text.toLowerCase();
+        for (let word of forbiddenWords) {
+            if (lowerText.includes(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    function showErrorToast(msg) {
+        const t = document.getElementById('toastMsg');
+        t.innerText = msg;
+        t.classList.add('toast-error');
+        t.style.opacity = '1';
+        setTimeout(() => { 
+            t.style.opacity = '0';
+            t.classList.remove('toast-error');
+        }, 3000);
+    }
+    
+    // Глобальные данные
     let products = [], users = [], orders = [], cart = [], currentUserId = null, tempCodeStore = {};
     let isPremium = false, isUltra = false, premiumExpiry = null, ultraExpiry = null;
     let currentTheme = localStorage.getItem('flypuck_theme') || 'light';
     let premiumRequests = [], ultraRequests = [], reviews = [];
     let giveaways = [];
+    let blockedAttemptsLog = []; // Лог заблокированных попыток
     
-    // Загрузка данных
     function loadData() {
         const defaultProducts = [
             {id:1, name:"Клюшка CCM Ribcor", price:12990, imageUrl:"https://images.unsplash.com/photo-1598971861713-54f16a66b3da?w=300&h=200&fit=crop"},
@@ -337,6 +379,7 @@
         ultraRequests = JSON.parse(localStorage.getItem('flypuck_ultra_requests') || '[]');
         reviews = JSON.parse(localStorage.getItem('flypuck_reviews') || '[]');
         giveaways = JSON.parse(localStorage.getItem('flypuck_giveaways') || '[]');
+        blockedAttemptsLog = JSON.parse(localStorage.getItem('flypuck_blocked_attempts') || '[]');
         const prem = localStorage.getItem('flypuck_premium'); if(prem) { const d=JSON.parse(prem); if(d.active && d.expiry>Date.now()) { isPremium=true; premiumExpiry=d.expiry; } else localStorage.removeItem('flypuck_premium'); }
         const ultra = localStorage.getItem('flypuck_ultra'); if(ultra) { const d=JSON.parse(ultra); if(d.active && d.expiry>Date.now()) { isUltra=true; ultraExpiry=d.expiry; } else localStorage.removeItem('flypuck_ultra'); }
     }
@@ -349,19 +392,20 @@
         localStorage.setItem('flypuck_ultra_requests', JSON.stringify(ultraRequests));
         localStorage.setItem('flypuck_reviews', JSON.stringify(reviews));
         localStorage.setItem('flypuck_giveaways', JSON.stringify(giveaways));
+        localStorage.setItem('flypuck_blocked_attempts', JSON.stringify(blockedAttemptsLog));
     }
     
     function getBonus(){ const uid = currentUserId; if(uid) return parseInt(localStorage.getItem(`flypuck_bonus_user_${uid}`) || '0'); return 0; }
     function setBonus(val){ if(currentUserId) localStorage.setItem(`flypuck_bonus_user_${currentUserId}`, val); }
-    function showToast(msg){ const t=document.getElementById('toastMsg'); t.innerText=msg; t.style.opacity='1'; setTimeout(()=>t.style.opacity='0',2000); }
+    function showToast(msg){ const t=document.getElementById('toastMsg'); t.innerText=msg; t.classList.remove('toast-error'); t.style.opacity='1'; setTimeout(()=>t.style.opacity='0',2000); }
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
     
-    // Отрисовка товаров для ВСЕХ пользователей
     function renderShop() {
         const container = document.getElementById('productsGridContainer');
         if(container && products.length > 0) {
             container.innerHTML = products.map(p => `
                 <div class="product-card">
-                    <img class="product-image" src="${p.imageUrl || 'https://via.placeholder.com/300x200?text=Хоккей'}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=🏒'">
+                    <img class="product-image" src="${p.imageUrl || 'https://via.placeholder.com/300x200?text=Хоккей'}" alt="${escapeHtml(p.name)}" onerror="this.src='https://via.placeholder.com/300x200?text=🏒'">
                     <div class="product-title">${escapeHtml(p.name)}</div>
                     <div class="product-price">${p.price.toLocaleString()} ₽</div>
                     <button class="add-to-cart" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}">В корзину</button>
@@ -372,8 +416,6 @@
         }
         document.querySelectorAll('.add-to-cart').forEach(btn=>btn.addEventListener('click',()=>addToCart(parseInt(btn.dataset.id), btn.dataset.name, parseInt(btn.dataset.price))));
     }
-    
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
     
     function addToCart(id,name,price){ let ex=cart.find(i=>i.id===id); if(ex) ex.quantity++; else cart.push({id,name,price,quantity:1}); updateCartUI(); showToast(`✓ ${name} в корзине`); }
     
@@ -430,19 +472,99 @@
     });
     
     function renderAuthModal() {
-        const container=document.getElementById('authContent');
+        const container = document.getElementById('authContent');
         if(currentUserId){
-            const user=users.find(u=>u.id===currentUserId);
+            const user = users.find(u => u.id === currentUserId);
             if(user){
-                container.innerHTML=`<h3>Профиль</h3><div class="profile-info"><strong>${escapeHtml(user.name)}</strong><br>${user.phone}<br>Бонус: ${getBonus()}₽<br>Premium: ${isPremium?'Активен до '+new Date(premiumExpiry).toLocaleDateString():'Не активен'}<br>Ultra: ${isUltra?'Активен до '+new Date(ultraExpiry).toLocaleDateString():'Не активен'}</div><div class="theme-selector"><button class="theme-btn ${currentTheme==='light'?'active':''}" data-theme="light">🌞 Светлая</button><button class="theme-btn ${currentTheme==='dark'?'active':''}" data-theme="dark">🌙 Тёмная</button><button class="theme-btn ${currentTheme==='hockey'?'active':''}" data-theme="hockey">🏒 Хоккейная</button></div><button id="logoutBtn" class="btn-primary">Выйти</button>`;
-                document.querySelectorAll('.theme-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.body.className = btn.dataset.theme; localStorage.setItem('flypuck_theme', btn.dataset.theme); currentTheme = btn.dataset.theme; renderAuthModal(); }));
-                document.getElementById('logoutBtn').onclick=()=>{ currentUserId=null; localStorage.removeItem('flypuck_currentUserId'); renderAuthModal(); updateCartUI(); showToast("Вы вышли"); document.getElementById('authModal').classList.remove('open'); };
+                container.innerHTML = `
+                    <h3><i class="fas fa-user-circle"></i> Профиль</h3>
+                    <div class="profile-info">
+                        <strong>${escapeHtml(user.name)}</strong><br>
+                        📞 ${user.phone}<br>
+                        🎁 Бонус: ${getBonus()} ₽<br>
+                        ⭐ Premium: ${isPremium ? 'Активен до ' + new Date(premiumExpiry).toLocaleDateString() : 'Не активен'}<br>
+                        ⚡ Ultra: ${isUltra ? 'Активен до ' + new Date(ultraExpiry).toLocaleDateString() : 'Не активен'}
+                    </div>
+                    <div class="site-info">
+                        <h4><i class="fas fa-info-circle"></i> О сайте FlyPuck37</h4>
+                        <ul>
+                            <li><i class="fas fa-hockey-puck"></i> Крупнейший хоккейный маркетплейс</li>
+                            <li><i class="fas fa-truck"></i> Быстрая доставка по всей России</li>
+                            <li><i class="fas fa-shield-alt"></i> Гарантия качества 100%</li>
+                            <li><i class="fas fa-gift"></i> Регулярные розыгрыши призов</li>
+                            <li><i class="fas fa-percent"></i> Скидки до 30% для подписчиков</li>
+                            <li><i class="fas fa-headset"></i> Поддержка 24/7</li>
+                        </ul>
+                        <div style="margin-top: 15px; text-align: center;">
+                            <a href="https://t.me/zaitsss1" target="_blank" style="background: #0088cc; color: white; padding: 8px 20px; border-radius: 40px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;"><i class="fab fa-telegram"></i> Связаться с админом</a>
+                        </div>
+                    </div>
+                    <div class="theme-selector">
+                        <button class="theme-btn ${currentTheme==='light'?'active':''}" data-theme="light">🌞 Светлая</button>
+                        <button class="theme-btn ${currentTheme==='dark'?'active':''}" data-theme="dark">🌙 Тёмная</button>
+                        <button class="theme-btn ${currentTheme==='hockey'?'active':''}" data-theme="hockey">🏒 Хоккейная</button>
+                    </div>
+                    <button id="logoutBtn" class="btn-primary" style="margin-top: 15px; width: 100%;">🚪 Выйти</button>
+                `;
+                document.querySelectorAll('.theme-btn').forEach(btn => btn.addEventListener('click', () => { 
+                    document.body.className = btn.dataset.theme; 
+                    localStorage.setItem('flypuck_theme', btn.dataset.theme); 
+                    currentTheme = btn.dataset.theme; 
+                    renderAuthModal(); 
+                }));
+                document.getElementById('logoutBtn').onclick = () => { 
+                    currentUserId = null; 
+                    localStorage.removeItem('flypuck_currentUserId'); 
+                    renderAuthModal(); 
+                    updateCartUI(); 
+                    showToast("Вы вышли"); 
+                    document.getElementById('authModal').classList.remove('open'); 
+                };
                 return;
             }
         }
-        container.innerHTML=`<h3>Вход / Регистрация</h3><div style="display:flex; flex-direction:column; gap:12px;"><input id="regPhone" placeholder="Телефон" style="padding:10px; border-radius:30px;"><input id="regName" placeholder="Ваше имя"><div style="display:flex; gap:10px;"><input id="regCode" placeholder="Код" style="flex:1;"><button id="sendCodeBtn" class="btn-primary">Отправить код</button></div><button id="verifyCodeBtn" class="btn-primary">Войти</button><p style="margin-top:10px; font-size:0.85rem;">Демо-код: 123456</p></div>`;
-        document.getElementById('sendCodeBtn').onclick=()=>{ const p=document.getElementById('regPhone').value.trim(); if(p){ tempCodeStore[p]='123456'; showToast(`Код: 123456`); } };
-        document.getElementById('verifyCodeBtn').onclick=()=>{ const phone=document.getElementById('regPhone').value.trim(), name=document.getElementById('regName').value.trim(), code=document.getElementById('regCode').value.trim(); if(code!=='123456'){ showToast("Неверный код"); return; } let user=users.find(u=>u.phone===phone); if(!user){ user={id:users.length+1,phone,name:name||"Пользователь",orders:[]}; users.push(user); saveAll(); } currentUserId=user.id; localStorage.setItem('flypuck_currentUserId',currentUserId); renderAuthModal(); document.getElementById('authModal').classList.remove('open'); updateCartUI(); };
+        container.innerHTML = `
+            <h3><i class="fas fa-sign-in-alt"></i> Вход / Регистрация</h3>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <input id="regPhone" placeholder="Телефон" style="padding:10px; border-radius:30px;">
+                <input id="regName" placeholder="Ваше имя">
+                <div style="display:flex; gap:10px;">
+                    <input id="regCode" placeholder="Код" style="flex:1;">
+                    <button id="sendCodeBtn" class="btn-primary">Отправить код</button>
+                </div>
+                <button id="verifyCodeBtn" class="btn-primary">Войти</button>
+                <p style="margin-top:10px; font-size:0.85rem; text-align:center;">Демо-код: <strong>123456</strong></p>
+            </div>
+            <div class="site-info" style="margin-top: 20px;">
+                <h4><i class="fas fa-info-circle"></i> О сайте FlyPuck37</h4>
+                <ul>
+                    <li><i class="fas fa-hockey-puck"></i> Хоккейная экипировка</li>
+                    <li><i class="fas fa-truck"></i> Доставка по всей РФ</li>
+                    <li><i class="fas fa-gift"></i> Розыгрыши и акции</li>
+                </ul>
+            </div>
+        `;
+        document.getElementById('sendCodeBtn').onclick = () => { 
+            const p = document.getElementById('regPhone').value.trim(); 
+            if(p){ tempCodeStore[p]='123456'; showToast(`Код: 123456`); } 
+        };
+        document.getElementById('verifyCodeBtn').onclick = () => { 
+            const phone = document.getElementById('regPhone').value.trim(); 
+            const name = document.getElementById('regName').value.trim(); 
+            const code = document.getElementById('regCode').value.trim(); 
+            if(code !== '123456'){ showToast("Неверный код"); return; } 
+            let user = users.find(u => u.phone === phone); 
+            if(!user){ 
+                user = {id: users.length+1, phone, name: name || "Пользователь", orders: []}; 
+                users.push(user); 
+                saveAll(); 
+            } 
+            currentUserId = user.id; 
+            localStorage.setItem('flypuck_currentUserId', currentUserId); 
+            renderAuthModal(); 
+            document.getElementById('authModal').classList.remove('open'); 
+            updateCartUI(); 
+        };
     }
     
     function sendPremiumRequest() {
@@ -525,7 +647,7 @@
     setInterval(updateTables, 3600000);
     updateTables();
     
-    // Админ-панель - добавление товаров, которые увидят ВСЕ пользователи
+    // Админ-панель с цензурным ботом
     const adminPanelContainer = document.createElement('div');
     adminPanelContainer.className = 'admin-panel-container';
     adminPanelContainer.id = 'adminPanelContainer';
@@ -547,33 +669,59 @@
         const stats = { totalUsers: users.length, totalOrders: orders.length, totalRevenue: orders.reduce((sum,o)=>sum+o.total,0) };
         adminPanelContainer.innerHTML = `<div class="container"><div style="display:flex; justify-content:space-between; margin-bottom:20px;"><h1><i class="fas fa-shield-alt"></i> Админ-панель FlyPuck37</h1><button id="closeAdminPanelBtn" style="background:#ef4444; padding:8px 20px; border-radius:40px; border:none; color:white; cursor:pointer;">✕ Закрыть</button></div>
         <div class="admin-card"><h3><i class="fas fa-chart-line"></i> Статистика</h3><p>👥 Пользователей: ${stats.totalUsers} | 📦 Заказов: ${stats.totalOrders} | 💰 Выручка: ${stats.totalRevenue.toLocaleString()} ₽</p></div>
-        <div class="admin-card"><h3><i class="fas fa-tags"></i> ➕ Добавить товар (увидят все пользователи)</h3><div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;"><input id="newProdName" placeholder="Название товара" style="padding:8px; border-radius:30px;"><input id="newProdPrice" type="number" placeholder="Цена" style="padding:8px; border-radius:30px;"><input id="newProdImageUrl" placeholder="Ссылка на фото (URL)" style="padding:8px; border-radius:30px; flex:2;"><button id="addProductAdminBtn" class="btn-primary">➕ Добавить товар</button></div><h3>📋 Список товаров</h3><div id="adminProductsList"></div></div>
+        <div class="admin-card"><h3><i class="fas fa-robot"></i> 🤖 Цензурный бот <span class="bot-status bot-active"><i class="fas fa-shield-alt"></i> Активен</span></h3><p>Бот блокирует добавление товаров с нецензурными названиями. Заблокировано попыток: ${blockedAttemptsLog.length}</p></div>
+        <div class="admin-card"><h3><i class="fas fa-tags"></i> ➕ Добавить товар (проверка цензуры)</h3><div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;"><input id="newProdName" placeholder="Название товара" style="padding:8px; border-radius:30px;"><input id="newProdPrice" type="number" placeholder="Цена" style="padding:8px; border-radius:30px;"><input id="newProdImageUrl" placeholder="Ссылка на фото (URL)" style="padding:8px; border-radius:30px; flex:2;"><button id="addProductAdminBtn" class="btn-primary">➕ Добавить товар</button></div><div id="adminProductsList"></div></div>
         <div class="admin-card"><h3><i class="fas fa-star-of-life"></i> Заявки на Premium</h3><div id="premiumRequestsList"></div></div>
         <div class="admin-card"><h3><i class="fas fa-bolt"></i> Заявки на Ultra Prime</h3><div id="ultraRequestsList"></div></div>
         <div class="admin-card"><h3><i class="fas fa-gift"></i> 🎁 Розыгрыши</h3><div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;"><input id="giveawayTitle" placeholder="Название"><input id="giveawayPrize" placeholder="Приз"><input id="giveawayEndDate" type="date"><button id="addGiveawayBtn" class="btn-primary">➕ Создать</button></div><div id="adminGiveawaysList"></div></div>
         <div class="admin-card"><h3><i class="fas fa-comment-dots"></i> Отзывы</h3><div id="adminReviewsList"></div></div>
-        <div class="admin-card"><h3><i class="fas fa-donate"></i> Бонусы пользователям</h3><div><input id="bonusUserId" placeholder="ID пользователя"><input id="bonusAmount" placeholder="Сумма бонуса"><button id="addBonusBtn" class="btn-primary">➕ Начислить</button></div></div>
+        <div class="admin-card"><h3><i class="fas fa-donate"></i> Бонусы пользователям</h3><div><input id="bonusUserId" placeholder="ID пользователя"><input id="bonusAmount" placeholder="Сумма"><button id="addBonusBtn" class="btn-primary">➕ Начислить</button></div></div>
         </div>`;
         
-        // Список товаров для админа
-        document.getElementById('adminProductsList').innerHTML = products.map(p => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid var(--border);"><div style="display:flex; align-items:center; gap:10px;"><img src="${p.imageUrl || 'https://via.placeholder.com/50x50'}" style="width:40px; height:40px; object-fit:cover; border-radius:8px;" onerror="this.src='https://via.placeholder.com/50'"> <strong>${escapeHtml(p.name)}</strong> - ${p.price}₽</div><button onclick="deleteProductAdmin(${p.id})" style="background:#ef4444; color:white; border:none; border-radius:30px; padding:5px 12px; cursor:pointer;">🗑️ Удалить</button></div>`).join('');
+        document.getElementById('adminProductsList').innerHTML = products.map(p => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid var(--border);"><div style="display:flex; align-items:center; gap:10px;"><img src="${p.imageUrl || 'https://via.placeholder.com/50x50'}" style="width:40px; height:40px; object-fit:cover; border-radius:8px;"> <strong>${escapeHtml(p.name)}</strong> - ${p.price}₽</div><button onclick="deleteProductAdmin(${p.id})" style="background:#ef4444; color:white; border:none; border-radius:30px; padding:5px 12px;">🗑️</button></div>`).join('');
         
-        // Добавление товара - все пользователи увидят его сразу
+        // Добавление товара с ПРОВЕРКОЙ ЦЕНЗУРЫ
         document.getElementById('addProductAdminBtn').onclick = () => { 
             const name = document.getElementById('newProdName').value.trim(); 
             const price = parseInt(document.getElementById('newProdPrice').value);
             let imageUrl = document.getElementById('newProdImageUrl').value.trim();
             if(!imageUrl) imageUrl = 'https://via.placeholder.com/300x200?text=Хоккей';
+            
+            // ЦЕНЗУРНАЯ ПРОВЕРКА
+            if(checkProfanity(name)) {
+                // Записываем попытку в лог
+                blockedAttemptsLog.push({
+                    date: new Date().toLocaleString(),
+                    attemptedName: name,
+                    price: price,
+                    message: "Заблокировано: нецензурное название"
+                });
+                saveAll();
+                // Показываем предупреждение и блокируем добавление
+                const errorMsg = `🤖 ЦЕНЗУРНЫЙ БОТ: Название "${name}" содержит нецензурную лексику!\nТовар НЕ добавлен. Нарушение зафиксировано.`;
+                showErrorToast(errorMsg);
+                // Добавляем визуальный эффект на поле ввода
+                const nameInput = document.getElementById('newProdName');
+                nameInput.style.animation = 'shake 0.3s ease-in-out';
+                nameInput.style.border = '2px solid #ef4444';
+                setTimeout(() => {
+                    nameInput.style.animation = '';
+                    nameInput.style.border = '';
+                }, 500);
+                return; // БЛОКИРУЕМ ДОБАВЛЕНИЕ
+            }
+            
             if(name && !isNaN(price) && price > 0) { 
                 const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
                 products.push({id:newId, name, price, imageUrl}); 
                 saveAll(); 
-                renderShop();   // Обновляем витрину для всех
+                renderShop(); 
                 renderAdminPanel(); 
-                showToast(`✅ Товар "${name}" добавлен! Все пользователи видят его.`); 
+                showToast(`✅ Товар "${name}" успешно добавлен! Цензура пройдена.`); 
                 document.getElementById('newProdName').value = '';
                 document.getElementById('newProdPrice').value = '';
                 document.getElementById('newProdImageUrl').value = '';
+                document.getElementById('newProdName').style.border = '';
             } else showToast("Заполните название и корректную цену");
         };
         
@@ -591,13 +739,7 @@
         document.getElementById('closeAdminPanelBtn').onclick = () => adminPanelContainer.classList.remove('open');
     }
     
-    window.deleteProductAdmin = (id) => { 
-        products = products.filter(p=>p.id!==id); 
-        saveAll(); 
-        renderShop();      // Обновляем витрину после удаления
-        renderAdminPanel(); 
-        showToast("Товар удалён"); 
-    };
+    window.deleteProductAdmin = (id) => { products = products.filter(p=>p.id!==id); saveAll(); renderShop(); renderAdminPanel(); showToast("Товар удалён"); };
     window.deleteReviewAdmin = (id) => { reviews=reviews.filter(r=>r.id!==id); saveAll(); renderReviews(); renderAdminPanel(); showToast("Отзыв удалён"); };
     window.deleteGiveawayAdmin = (id) => { giveaways=giveaways.filter(g=>g.id!==id); saveAll(); renderGiveaways(); renderAdminPanel(); showToast("Розыгрыш удалён"); };
     
