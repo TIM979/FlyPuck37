@@ -1,9 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>FlyPuck37 | Хоккейная тема + обои</title>
+    <title>FlyPuck37 | Хоккейная тема + товары от админа</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -11,7 +11,6 @@
         
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shimmerText { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-        @keyframes iceGlow { 0% { opacity: 0.3; } 50% { opacity: 0.6; } 100% { opacity: 0.3; } }
         @keyframes floatStickers { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } 100% { transform: translateY(0) rotate(0deg); } }
         
         .shimmer-text {
@@ -23,15 +22,12 @@
             animation: shimmerText 3s linear infinite;
         }
         
-        /* Хоккейная тема - основная */
         body.hockey {
             --bg-page: #0a2f3a;
             --text-main: #f0f9ff;
             --card-bg: rgba(8, 60, 75, 0.85);
             --border: #2c9ab0;
             --navbar-bg: rgba(6, 33, 46, 0.95);
-            --hero-bg: linear-gradient(105deg, #0a3b4e 0%, #104c63 100%);
-            --footer-bg: #02121c;
             --primary: #e31e24;
             --secondary: #f5b042;
             --accent: #ffd700;
@@ -54,7 +50,6 @@
             pointer-events: none;
             z-index: 0;
         }
-        /* Плавающие стикеры */
         body.hockey .floating-stickers {
             position: fixed;
             top: 0;
@@ -133,11 +128,20 @@
         .premium-btn { background: linear-gradient(135deg, #ffd700, #ff8c00); color: #1e1e2f; }
         .ultra-btn { background: linear-gradient(135deg, #ffaa00, #ff6600); color: white; }
         
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 28px; margin-top: 20px; }
-        .product-card { background: var(--card-bg); border-radius: 24px; padding: 18px; text-align: center; border: 1px solid var(--border); transition: transform 0.3s; backdrop-filter: blur(5px); }
-        .product-card:hover { transform: translateY(-8px); }
-        .product-price { font-weight: 800; font-size: 1.3rem; color: var(--secondary); margin: 8px 0; }
-        .add-to-cart { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 40px; cursor: pointer; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 28px; margin-top: 20px; margin-bottom: 40px; }
+        .product-card { background: var(--card-bg); border-radius: 24px; padding: 18px; text-align: center; border: 1px solid var(--border); transition: transform 0.3s, box-shadow 0.3s; backdrop-filter: blur(5px); }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 30px -10px rgba(0,0,0,0.2); }
+        .product-image { width: 100%; height: 200px; object-fit: cover; border-radius: 16px; margin-bottom: 12px; background: rgba(0,0,0,0.1); }
+        .product-title { font-weight: 700; font-size: 1.1rem; margin: 8px 0 4px; }
+        .product-price { font-weight: 800; font-size: 1.4rem; color: var(--secondary); margin: 8px 0; }
+        .add-to-cart { background: var(--primary); color: white; border: none; width: 100%; padding: 12px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
+        .add-to-cart:hover { opacity: 0.9; }
+        
+        .giveaways-section { margin: 40px 0; padding: 30px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); backdrop-filter: blur(5px); }
+        .giveaway-card { background: linear-gradient(135deg, rgba(227,30,36,0.1), rgba(245,176,66,0.1)); border-radius: 24px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--primary); transition: transform 0.2s; }
+        .giveaway-card:hover { transform: translateY(-5px); }
+        .giveaway-prize { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .participate-btn { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 40px; cursor: pointer; font-weight: bold; margin-top: 10px; }
         
         .reviews-section { margin: 40px 0; padding: 30px; background: var(--card-bg); border-radius: 40px; border: 1px solid var(--border); backdrop-filter: blur(5px); }
         .review-card { background: rgba(0,0,0,0.05); border-radius: 24px; padding: 18px; margin-bottom: 15px; border-left: 4px solid var(--primary); }
@@ -167,7 +171,7 @@
         .cart-sidebar.open { right: 0; }
         .cart-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); z-index:200; visibility: hidden; opacity:0; transition:0.2s; }
         .cart-overlay.open { visibility: visible; opacity:1; }
-        .checkout-btn { background: var(--primary); color:white; padding:12px; border-radius:40px; border:none; font-weight:bold; width:100%; margin-top: 16px; cursor: pointer; }
+        .contact-admin-btn { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; padding: 12px; border-radius: 40px; border: none; font-weight: bold; width: 100%; margin-top: 16px; cursor: pointer; }
         .toast-msg { position: fixed; bottom: 20px; left: 20px; background: #1e293b; color: white; padding: 10px 20px; border-radius: 40px; z-index: 400; opacity:0; transition:0.2s; }
         .profile-info { background: rgba(0,0,0,0.05); border-radius: 24px; padding: 16px; margin-top: 16px; }
         .theme-selector { display: flex; gap: 12px; margin-top: 15px; flex-wrap: wrap; }
@@ -188,12 +192,18 @@
         }
         .admin-panel-container.open { display: block; }
         .admin-card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); backdrop-filter: blur(5px); }
+        .request-item { background: rgba(0,0,0,0.1); padding: 12px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .request-actions button { margin: 0 5px; padding: 6px 12px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; }
+        .approve-btn { background: #22c55e; color: white; }
+        .reject-btn { background: #ef4444; color: white; }
+        .draw-btn { background: #8b5cf6; color: white; }
+        .btn-primary { background: var(--primary); color: white; padding: 8px 16px; border-radius: 40px; border: none; cursor: pointer; }
+        input, select { padding: 8px 12px; border-radius: 30px; border: 1px solid var(--border); background: var(--bg-page); color: var(--text-main); }
         @media (max-width:700px){ .subscriptions { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr; } .nav-menu { display: none; } }
     </style>
 </head>
 <body class="light">
 
-<!-- Плавающие стикеры только для хоккейной темы -->
 <div class="floating-stickers">
     <i class="fas fa-hockey-puck"></i>
     <i class="fas fa-hockey-sticks"></i>
@@ -209,6 +219,7 @@
         <div class="logo"><i class="fas fa-hockey-puck"></i> FlyPuck37 | <span class="shimmer-text">Хоккейный маркетплейс</span></div>
         <ul class="nav-menu">
             <li><a href="#shop">🛒 Магазин</a></li>
+            <li><a href="#giveaways">🎁 Розыгрыши</a></li>
             <li><a href="#reviews">⭐ Отзывы</a></li>
             <li><a href="#contacts">📞 Контакты</a></li>
         </ul>
@@ -237,15 +248,21 @@
             <div id="ultraStatus" style="margin-top: 10px;"></div>
         </div>
     </div>
+    
+    <h2 class="shimmer-text" style="margin: 30px 0 10px;"><i class="fas fa-store"></i> Наши товары</h2>
+    <div id="productsGridContainer" class="products-grid"></div>
 </div>
 
-<div class="container">
-    <div id="productsGridContainer" class="products-grid"></div>
+<div class="container" id="giveaways">
+    <div class="giveaways-section">
+        <h3 class="shimmer-text"><i class="fas fa-gift"></i> 🎁 Активные розыгрыши</h3>
+        <div id="giveawaysList"></div>
+    </div>
 </div>
 
 <div class="container" id="reviews">
     <div class="reviews-section">
-        <div class="reviews-header">
+        <div class="reviews-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
             <div><h3 class="shimmer-text"><i class="fas fa-star"></i> Отзывы покупателей</h3><div class="avg-rating" id="avgRatingDisplay">⭐ 0.0</div></div>
             <button class="add-review-btn" id="addReviewBtn"><i class="fas fa-pen"></i> Оставить отзыв</button>
         </div>
@@ -267,8 +284,8 @@
 <footer class="stats-footer">
     <div class="container">
         <div class="footer-grid">
-            <div><h3 class="shimmer-text">🏒 Интересные факты</h3><table class="facts-table" id="factsTable"><thead><tr><th>#</th><th>Факт</th></tr></thead><tbody id="factsTableBody"></tbody></table></div>
-            <div><h3 class="shimmer-text">🏆 Топ бомбардиров НХЛ</h3><table class="scorers-table" id="scorersTable"><thead><tr><th>#</th><th>Игрок</th><th>Очки</th></tr></thead><tbody id="scorersTableBody"></tbody></table></div>
+            <div><h3 class="shimmer-text">🏒 Интересные факты</h3><table class="facts-table"><thead><tr><th>#</th><th>Факт</th></tr></thead><tbody id="factsTableBody"></tbody></table></div>
+            <div><h3 class="shimmer-text">🏆 Топ бомбардиров НХЛ</h3><table class="scorers-table"><thead><tr><th>#</th><th>Игрок</th><th>Очки</th></tr></thead><tbody id="scorersTableBody"></tbody></table></div>
         </div>
     </div>
 </footer>
@@ -277,11 +294,16 @@
 
 <div id="authModal" class="modal-overlay"><div class="modal-container"><button class="close-modal" id="closeAuthModal">&times;</button><div id="authContent"></div></div></div>
 <div class="cart-overlay" id="cartOverlay"></div>
-<div class="cart-sidebar" id="cartSidebar"><div class="cart-header"><span>Корзина</span><button id="closeCartBtn" style="background:none;font-size:1.8rem;">&times;</button></div><div class="cart-items" id="cartItemsList"></div><div class="cart-total" id="cartTotalPrice"></div><button class="checkout-btn" id="checkoutBtn">Оформить заказ</button></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;"><span style="font-size:1.5rem; font-weight:bold;">🛒 Корзина</span><button id="closeCartBtn" style="background:none; font-size:1.8rem; cursor:pointer; border:none;">&times;</button></div>
+    <div class="cart-items" id="cartItemsList" style="flex:1; overflow-y: auto;"></div>
+    <div class="cart-total" id="cartTotalPrice" style="font-weight:bold; font-size:1.2rem; margin:15px 0;"></div>
+    <div class="cart-discount-info" id="cartDiscountInfo" style="font-size:0.85rem; opacity:0.8; margin-bottom:10px;"></div>
+    <button class="contact-admin-btn" id="contactAdminOrderBtn"><i class="fab fa-telegram"></i> 📝 Написать админу для заказа</button>
+</div>
 <div class="toast-msg" id="toastMsg"></div>
 
 <script>
-    // Музыка
     const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3');
     audio.loop = true; audio.volume = 0.3;
     let isMusicPlaying = false;
@@ -293,15 +315,22 @@
     volumeSlider.addEventListener('input', (e) => { audio.volume = parseFloat(e.target.value); });
     document.body.addEventListener('click', function firstClick() { if(!isMusicPlaying) playMusic(); document.body.removeEventListener('click', firstClick); }, { once: true });
     
-    // Глобальные данные
+    // Глобальные данные - все товары видны каждому пользователю
     let products = [], users = [], orders = [], cart = [], currentUserId = null, tempCodeStore = {};
     let isPremium = false, isUltra = false, premiumExpiry = null, ultraExpiry = null;
     let currentTheme = localStorage.getItem('flypuck_theme') || 'light';
     let premiumRequests = [], ultraRequests = [], reviews = [];
     let giveaways = [];
     
+    // Загрузка данных
     function loadData() {
-        products = JSON.parse(localStorage.getItem('flypuck_products') || '[{"id":1,"name":"Клюшка CCM Ribcor","price":12990,"image":"🏒"},{"id":2,"name":"Коньки Bauer Supreme","price":22990,"image":"⛸️"},{"id":3,"name":"Шлем CCM Tacks","price":8990,"image":"⛑️"},{"id":4,"name":"Свитер сборной России","price":5990,"image":"🇷🇺"}]');
+        const defaultProducts = [
+            {id:1, name:"Клюшка CCM Ribcor", price:12990, imageUrl:"https://images.unsplash.com/photo-1598971861713-54f16a66b3da?w=300&h=200&fit=crop"},
+            {id:2, name:"Коньки Bauer Supreme", price:22990, imageUrl:"https://images.unsplash.com/photo-1583258278865-7b4617e0c12b?w=300&h=200&fit=crop"},
+            {id:3, name:"Шлем CCM Tacks", price:8990, imageUrl:"https://images.unsplash.com/photo-1611339555312-e607c8352fd7?w=300&h=200&fit=crop"},
+            {id:4, name:"Свитер сборной России", price:5990, imageUrl:"https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=300&h=200&fit=crop"}
+        ];
+        products = JSON.parse(localStorage.getItem('flypuck_products') || JSON.stringify(defaultProducts));
         users = JSON.parse(localStorage.getItem('flypuck_users') || '[]');
         orders = JSON.parse(localStorage.getItem('flypuck_orders') || '[]');
         premiumRequests = JSON.parse(localStorage.getItem('flypuck_premium_requests') || '[]');
@@ -310,8 +339,8 @@
         giveaways = JSON.parse(localStorage.getItem('flypuck_giveaways') || '[]');
         const prem = localStorage.getItem('flypuck_premium'); if(prem) { const d=JSON.parse(prem); if(d.active && d.expiry>Date.now()) { isPremium=true; premiumExpiry=d.expiry; } else localStorage.removeItem('flypuck_premium'); }
         const ultra = localStorage.getItem('flypuck_ultra'); if(ultra) { const d=JSON.parse(ultra); if(d.active && d.expiry>Date.now()) { isUltra=true; ultraExpiry=d.expiry; } else localStorage.removeItem('flypuck_ultra'); }
-        if(isUltra && currentTheme === 'hockey') document.body.classList.add('ultra-prime-bg');
     }
+    
     function saveAll() { 
         localStorage.setItem('flypuck_products', JSON.stringify(products)); 
         localStorage.setItem('flypuck_users', JSON.stringify(users)); 
@@ -321,57 +350,101 @@
         localStorage.setItem('flypuck_reviews', JSON.stringify(reviews));
         localStorage.setItem('flypuck_giveaways', JSON.stringify(giveaways));
     }
-    function getBonus(){ return parseInt(localStorage.getItem('flypuck_bonus')||'0'); }
-    function setBonus(val){ localStorage.setItem('flypuck_bonus', val); }
+    
+    function getBonus(){ const uid = currentUserId; if(uid) return parseInt(localStorage.getItem(`flypuck_bonus_user_${uid}`) || '0'); return 0; }
+    function setBonus(val){ if(currentUserId) localStorage.setItem(`flypuck_bonus_user_${currentUserId}`, val); }
     function showToast(msg){ const t=document.getElementById('toastMsg'); t.innerText=msg; t.style.opacity='1'; setTimeout(()=>t.style.opacity='0',2000); }
     
-    // Магазин
+    // Отрисовка товаров для ВСЕХ пользователей
     function renderShop() {
         const container = document.getElementById('productsGridContainer');
-        if(container) container.innerHTML = products.map(p => `
-            <div class="product-card"><div style="font-size:3rem;">${p.image}</div><div class="product-title">${p.name}</div><div class="product-price">${p.price.toLocaleString()} ₽</div><button class="add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}">В корзину</button></div>
-        `).join('');
-        document.querySelectorAll('.add-to-cart').forEach(btn=>btn.addEventListener('click',()=>addToCart(parseInt(btn.dataset.id),btn.dataset.name,parseInt(btn.dataset.price))));
+        if(container && products.length > 0) {
+            container.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <img class="product-image" src="${p.imageUrl || 'https://via.placeholder.com/300x200?text=Хоккей'}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300x200?text=🏒'">
+                    <div class="product-title">${escapeHtml(p.name)}</div>
+                    <div class="product-price">${p.price.toLocaleString()} ₽</div>
+                    <button class="add-to-cart" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}">В корзину</button>
+                </div>
+            `).join('');
+        } else if(container) {
+            container.innerHTML = '<div style="text-align:center; padding:40px;">😢 Товаров пока нет. Админ скоро добавит!</div>';
+        }
+        document.querySelectorAll('.add-to-cart').forEach(btn=>btn.addEventListener('click',()=>addToCart(parseInt(btn.dataset.id), btn.dataset.name, parseInt(btn.dataset.price))));
     }
-    function addToCart(id,name,price){ let ex=cart.find(i=>i.id===id); if(ex) ex.quantity++; else cart.push({id,name,price,quantity:1}); updateCartUI(); showToast(`✓ ${name} в корзине`); }
-    function updateCartUI(){ const count=cart.reduce((s,i)=>s+i.quantity,0); document.getElementById('cartCountBadge').innerText=count; const cd=document.getElementById('cartItemsList'); if(!cart.length){ cd.innerHTML='Корзина пуста'; document.getElementById('cartTotalPrice').innerHTML='Итого: 0 ₽'; return; } cd.innerHTML=cart.map(i=>`<div class="cart-item"><div><b>${i.name}</b><br>${i.price}₽ x ${i.quantity}</div><div>${i.price*i.quantity}₽ <button class="cart-item-remove" data-id="${i.id}"><i class="fas fa-trash"></i></button></div></div>`).join(''); document.getElementById('cartTotalPrice').innerHTML=`Итого: ${cart.reduce((s,i)=>s+i.price*i.quantity,0)} ₽`; document.querySelectorAll('.cart-item-remove').forEach(btn=>btn.addEventListener('click',()=>{ const id=parseInt(btn.dataset.id); const idx=cart.findIndex(i=>i.id===id); if(idx!==-1){ if(cart[idx].quantity>1) cart[idx].quantity--; else cart.splice(idx,1); updateCartUI(); } })); }
     
-    document.getElementById('checkoutBtn').addEventListener('click',()=>{
-        if(!cart.length){ showToast("Корзина пуста"); return; }
-        if(!currentUserId){ showToast("Войдите в профиль"); document.getElementById('authModal').classList.add('open'); renderAuthModal(); return; }
-        let total = cart.reduce((s,i)=>s+i.price*i.quantity,0);
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    
+    function addToCart(id,name,price){ let ex=cart.find(i=>i.id===id); if(ex) ex.quantity++; else cart.push({id,name,price,quantity:1}); updateCartUI(); showToast(`✓ ${name} в корзине`); }
+    
+    function getDiscountInfo() {
         let disc = 0;
         if(isPremium && isUltra) disc = 30;
         else if(isUltra) disc = 20;
         else if(isPremium) disc = 8;
-        if(disc > 0) { let d = Math.floor(total * disc / 100); total -= d; showToast(`✨ Скидка ${disc}%: -${d}₽`); }
-        let bonus = getBonus(), bonusApplied = 0;
-        if(bonus>0 && total>0){ bonusApplied=Math.min(bonus,total); total-=bonusApplied; setBonus(bonus-bonusApplied); showToast(`✅ Бонус -${bonusApplied}₽`); }
-        orders.push({id:orders.length+1, userId:currentUserId, date:new Date().toLocaleString(), total:total, items:cart.map(i=>i.name)});
-        localStorage.setItem('flypuck_orders',JSON.stringify(orders));
-        const user = users.find(u=>u.id===currentUserId);
-        if(user) { if(!user.orders) user.orders=[]; user.orders.push({date:new Date().toLocaleString(), total:total}); saveAll(); }
-        alert(`Заказ оформлен!\nСумма: ${total}₽`); cart=[]; updateCartUI(); closeCart();
+        return { disc, text: disc > 0 ? `✨ Скидка ${disc}% активна!` : '' };
+    }
+    
+    function updateCartUI(){ 
+        const count=cart.reduce((s,i)=>s+i.quantity,0); 
+        document.getElementById('cartCountBadge').innerText=count; 
+        const cd=document.getElementById('cartItemsList'); 
+        if(!cart.length){ 
+            cd.innerHTML='<div style="text-align:center; padding:20px;">Корзина пуста</div>'; 
+            document.getElementById('cartTotalPrice').innerHTML='Итого: 0 ₽';
+            document.getElementById('cartDiscountInfo').innerHTML = '';
+            return; 
+        } 
+        let subtotal = cart.reduce((s,i)=>s+i.price*i.quantity,0);
+        const { disc, text } = getDiscountInfo();
+        let discountAmount = 0;
+        if(disc > 0) discountAmount = Math.floor(subtotal * disc / 100);
+        let total = subtotal - discountAmount;
+        let bonus = getBonus();
+        let bonusApplied = 0;
+        if(bonus > 0 && total > 0) { bonusApplied = Math.min(bonus, total); total -= bonusApplied; }
+        cd.innerHTML=cart.map(i=>`<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border);"><div><b>${escapeHtml(i.name)}</b><br>${i.price}₽ x ${i.quantity}</div><div>${i.price*i.quantity}₽ <button class="cart-item-remove" data-id="${i.id}" style="background:#ef4444; color:white; border:none; border-radius:30px; padding:5px 12px; margin-left:10px; cursor:pointer;">🗑️</button></div></div>`).join(''); 
+        document.getElementById('cartTotalPrice').innerHTML = `Сумма: ${subtotal}₽<br>${discountAmount > 0 ? `Скидка ${disc}%: -${discountAmount}₽<br>` : ''}${bonusApplied > 0 ? `Бонусы: -${bonusApplied}₽<br>` : ''}<span style="font-size:1.3rem; color:var(--primary);">💰 Итого к оплате: ${total}₽</span>`;
+        document.getElementById('cartDiscountInfo').innerHTML = text ? `<span style="color:#ffd700;">${text}</span>` : '';
+        document.querySelectorAll('.cart-item-remove').forEach(btn=>btn.addEventListener('click',()=>{ const id=parseInt(btn.dataset.id); const idx=cart.findIndex(i=>i.id===id); if(idx!==-1){ if(cart[idx].quantity>1) cart[idx].quantity--; else cart.splice(idx,1); updateCartUI(); } })); 
+    }
+    
+    document.getElementById('contactAdminOrderBtn').addEventListener('click', () => {
+        if(!cart.length){ showToast("Корзина пуста"); return; }
+        let subtotal = cart.reduce((s,i)=>s+i.price*i.quantity,0);
+        const { disc } = getDiscountInfo();
+        let discountAmount = 0;
+        if(disc > 0) discountAmount = Math.floor(subtotal * disc / 100);
+        let total = subtotal - discountAmount;
+        let bonus = getBonus();
+        let bonusApplied = 0;
+        if(bonus > 0 && total > 0) { bonusApplied = Math.min(bonus, total); total -= bonusApplied; }
+        const user = currentUserId ? users.find(u => u.id === currentUserId) : null;
+        const userName = user ? user.name : "Гость";
+        const userPhone = user ? user.phone : "Не указан";
+        const itemsList = cart.map(i => `${i.name} x${i.quantity} = ${i.price*i.quantity}₽`).join('\n');
+        const message = `🛒 *НОВЫЙ ЗАКАЗ*\n👤 Покупатель: ${userName}\n📞 Телефон: ${userPhone}\n\n📦 Товары:\n${itemsList}\n\n💰 Сумма: ${subtotal}₽\n${discountAmount > 0 ? `🎁 Скидка ${disc}%: -${discountAmount}₽\n` : ''}${bonusApplied > 0 ? `⭐ Бонусы: -${bonusApplied}₽\n` : ''}💵 *Итого: ${total}₽*`;
+        window.open(`https://t.me/zaitsss1?text=${encodeURIComponent(message)}`, '_blank');
+        showToast("📨 Переход в Telegram для оформления заказа");
+        closeCart();
     });
     
-    // Авторизация
     function renderAuthModal() {
         const container=document.getElementById('authContent');
         if(currentUserId){
             const user=users.find(u=>u.id===currentUserId);
             if(user){
-                container.innerHTML=`<h3>Профиль</h3><div class="profile-info"><strong>${user.name}</strong><br>${user.phone}<br>Бонус: ${getBonus()}₽<br>Premium: ${isPremium?'Активен до '+new Date(premiumExpiry).toLocaleDateString():'Не активен'}<br>Ultra: ${isUltra?'Активен до '+new Date(ultraExpiry).toLocaleDateString():'Не активен'}</div><div class="theme-selector"><button class="theme-btn ${currentTheme==='light'?'active':''}" data-theme="light">🌞 Светлая</button><button class="theme-btn ${currentTheme==='dark'?'active':''}" data-theme="dark">🌙 Тёмная</button><button class="theme-btn ${currentTheme==='hockey'?'active':''}" data-theme="hockey">🏒 Хоккейная</button></div><button id="logoutBtn" class="btn-primary">Выйти</button>`;
-                document.querySelectorAll('.theme-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.body.className = btn.dataset.theme; localStorage.setItem('flypuck_theme', btn.dataset.theme); currentTheme = btn.dataset.theme; renderAuthModal(); if(isUltra && currentTheme === 'hockey') document.body.classList.add('ultra-prime-bg'); else document.body.classList.remove('ultra-prime-bg'); }));
+                container.innerHTML=`<h3>Профиль</h3><div class="profile-info"><strong>${escapeHtml(user.name)}</strong><br>${user.phone}<br>Бонус: ${getBonus()}₽<br>Premium: ${isPremium?'Активен до '+new Date(premiumExpiry).toLocaleDateString():'Не активен'}<br>Ultra: ${isUltra?'Активен до '+new Date(ultraExpiry).toLocaleDateString():'Не активен'}</div><div class="theme-selector"><button class="theme-btn ${currentTheme==='light'?'active':''}" data-theme="light">🌞 Светлая</button><button class="theme-btn ${currentTheme==='dark'?'active':''}" data-theme="dark">🌙 Тёмная</button><button class="theme-btn ${currentTheme==='hockey'?'active':''}" data-theme="hockey">🏒 Хоккейная</button></div><button id="logoutBtn" class="btn-primary">Выйти</button>`;
+                document.querySelectorAll('.theme-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.body.className = btn.dataset.theme; localStorage.setItem('flypuck_theme', btn.dataset.theme); currentTheme = btn.dataset.theme; renderAuthModal(); }));
                 document.getElementById('logoutBtn').onclick=()=>{ currentUserId=null; localStorage.removeItem('flypuck_currentUserId'); renderAuthModal(); updateCartUI(); showToast("Вы вышли"); document.getElementById('authModal').classList.remove('open'); };
                 return;
             }
         }
-        container.innerHTML=`<h3>Вход</h3><div class="form-group"><input id="regPhone" placeholder="Телефон"></div><div class="form-group"><input id="regName" placeholder="Имя"></div><div class="form-group"><input id="regCode" placeholder="Код"><button id="sendCodeBtn" class="btn-primary">Отправить код</button></div><button id="verifyCodeBtn" class="btn-primary">Войти</button><p style="margin-top:10px;">Демо-код: 123456</p>`;
+        container.innerHTML=`<h3>Вход / Регистрация</h3><div style="display:flex; flex-direction:column; gap:12px;"><input id="regPhone" placeholder="Телефон" style="padding:10px; border-radius:30px;"><input id="regName" placeholder="Ваше имя"><div style="display:flex; gap:10px;"><input id="regCode" placeholder="Код" style="flex:1;"><button id="sendCodeBtn" class="btn-primary">Отправить код</button></div><button id="verifyCodeBtn" class="btn-primary">Войти</button><p style="margin-top:10px; font-size:0.85rem;">Демо-код: 123456</p></div>`;
         document.getElementById('sendCodeBtn').onclick=()=>{ const p=document.getElementById('regPhone').value.trim(); if(p){ tempCodeStore[p]='123456'; showToast(`Код: 123456`); } };
         document.getElementById('verifyCodeBtn').onclick=()=>{ const phone=document.getElementById('regPhone').value.trim(), name=document.getElementById('regName').value.trim(), code=document.getElementById('regCode').value.trim(); if(code!=='123456'){ showToast("Неверный код"); return; } let user=users.find(u=>u.phone===phone); if(!user){ user={id:users.length+1,phone,name:name||"Пользователь",orders:[]}; users.push(user); saveAll(); } currentUserId=user.id; localStorage.setItem('flypuck_currentUserId',currentUserId); renderAuthModal(); document.getElementById('authModal').classList.remove('open'); updateCartUI(); };
     }
     
-    // Заявки
     function sendPremiumRequest() {
         if(!currentUserId){ showToast("Сначала войдите"); document.getElementById('authModal').classList.add('open'); renderAuthModal(); return; }
         if(isPremium){ showToast("Premium уже активна!"); return; }
@@ -393,49 +466,145 @@
     document.getElementById('buyPremiumBtn').addEventListener('click', sendPremiumRequest);
     document.getElementById('buyUltraBtn').addEventListener('click', sendUltraRequest);
     
-    // Отзывы
+    function renderGiveaways() {
+        const container = document.getElementById('giveawaysList');
+        const activeGiveaways = giveaways.filter(g => g.status === 'active');
+        if(activeGiveaways.length === 0) { container.innerHTML = '<div style="text-align:center; padding:40px;">😢 Активных розыгрышей пока нет</div>'; return; }
+        container.innerHTML = activeGiveaways.map(g => {
+            const alreadyParticipated = g.participants && g.participants.some(p => p.userId === currentUserId);
+            const isWinner = g.winner && g.winner.userId === currentUserId;
+            const winnerText = g.winner ? `<div style="margin-top:10px; color:#ffd700;">🏆 Победитель: ${escapeHtml(g.winner.userName)}! 🏆</div>` : '';
+            return `<div class="giveaway-card"><div class="giveaway-prize">🎁 ${escapeHtml(g.prize)}</div><div><strong>${escapeHtml(g.title)}</strong></div><div>📅 Окончание: ${new Date(g.endDate).toLocaleDateString()}</div><div>👥 Участников: ${g.participants ? g.participants.length : 0}</div>${winnerText}${!isWinner && !alreadyParticipated && g.status === 'active' && new Date(g.endDate) > new Date() ? `<button class="participate-btn" data-id="${g.id}">🎲 Участвовать!</button>` : (alreadyParticipated && !g.winner ? `<div style="margin-top:10px; color:#22c55e;">✅ Вы уже участвуете!</div>` : '')}</div>`;
+        }).join('');
+        document.querySelectorAll('.participate-btn').forEach(btn => btn.addEventListener('click', () => participateInGiveaway(parseInt(btn.dataset.id))));
+    }
+    
+    function participateInGiveaway(giveawayId) {
+        if(!currentUserId){ showToast("Войдите в профиль"); document.getElementById('authModal').classList.add('open'); renderAuthModal(); return; }
+        const giveaway = giveaways.find(g => g.id === giveawayId);
+        if(!giveaway || giveaway.status !== 'active') { showToast("Розыгрыш уже завершён"); return; }
+        if(new Date(giveaway.endDate) < new Date()) { showToast("Розыгрыш окончен"); return; }
+        if(giveaway.participants && giveaway.participants.some(p => p.userId === currentUserId)) { showToast("Вы уже участвуете!"); return; }
+        const user = users.find(u => u.id === currentUserId);
+        if(!giveaway.participants) giveaway.participants = [];
+        giveaway.participants.push({ userId: currentUserId, userName: user.name, date: new Date().toLocaleString() });
+        saveAll();
+        showToast(`🎉 Вы участвуете в розыгрыше "${giveaway.title}"!`);
+        renderGiveaways();
+    }
+    
+    function drawWinner(giveawayId) {
+        const giveaway = giveaways.find(g => g.id === giveawayId);
+        if(!giveaway || giveaway.participants.length === 0) { showToast("Нет участников для розыгрыша"); return false; }
+        const randomIndex = Math.floor(Math.random() * giveaway.participants.length);
+        const winner = giveaway.participants[randomIndex];
+        giveaway.winner = winner;
+        giveaway.status = 'finished';
+        saveAll();
+        showToast(`🏆 Победитель розыгрыша "${giveaway.title}": ${winner.userName}! 🏆`);
+        renderGiveaways();
+        return true;
+    }
+    
     function renderReviews() {
         const container = document.getElementById('reviewsList');
         if(reviews.length===0) { container.innerHTML='<div style="text-align:center; padding:40px;">Пока нет отзывов</div>'; document.getElementById('avgRatingDisplay').innerHTML='⭐ 0.0'; return; }
         let total=0; reviews.forEach(r=>total+=r.rating);
         document.getElementById('avgRatingDisplay').innerHTML=`⭐ ${(total/reviews.length).toFixed(1)} (${reviews.length})`;
-        container.innerHTML = [...reviews].reverse().map(r=>`<div class="review-card"><div class="review-author"><strong>${r.userName}</strong><div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div></div><div class="review-text">${r.text}</div><div class="review-date">${r.date}</div></div>`).join('');
+        container.innerHTML = [...reviews].reverse().map(r=>`<div class="review-card"><div class="review-author"><strong>${escapeHtml(r.userName)}</strong><div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div></div><div class="review-text">${escapeHtml(r.text)}</div><div class="review-date">${r.date}</div></div>`).join('');
     }
     function addReview(rating,text){ if(!currentUserId){ showToast("Войдите"); return; } const user=users.find(u=>u.id===currentUserId); reviews.push({id:reviews.length+1, userId:currentUserId, userName:user.name, rating, text, date:new Date().toLocaleString()}); saveAll(); renderReviews(); showToast("Спасибо за отзыв!"); }
     document.getElementById('addReviewBtn').addEventListener('click',()=>{ if(!currentUserId){ showToast("Войдите"); document.getElementById('authModal').classList.add('open'); renderAuthModal(); return; } const r=parseInt(prompt("Оценка (1-5):","5")); if(r>=1&&r<=5){ const t=prompt("Ваш отзыв:"); if(t) addReview(r,t); } });
     
-    // Таблицы
     const hockeyFacts = ["Самая быстрая шайба: 183 км/ч","Первый матч: 1875","Монреаль: 24 Кубка Стэнли","Овечкин: 850+ голов","Гретцки: 2857 очков","Хоккей — спорт Канады","Макдэвид: 45 км/ч"];
     const scorers = [{name:"Гретцки",points:2857},{name:"Ягр",points:1921},{name:"Мессье",points:1887},{name:"Хоу",points:1850},{name:"Фрэнсис",points:1798}];
     function updateTables() {
-        document.getElementById('factsTableBody').innerHTML = hockeyFacts.map((f,i)=>`<tr><td class="fact-number">${i+1}<td>${f}</td></tr>`).join('');
-        document.getElementById('scorersTableBody').innerHTML = scorers.map((s,i)=>`<tr><td class="scorer-rank">${i+1}<td>${s.name}</td><td style="color:#ffd700;">${s.points}</td></tr>`).join('');
+        document.getElementById('factsTableBody').innerHTML = hockeyFacts.map((f,i)=>`<tr><td>${i+1}</td><td>${f}</td></tr>`).join('');
+        document.getElementById('scorersTableBody').innerHTML = scorers.map((s,i)=>`<tr><td>${i+1}</td><td>${s.name}</td><td style="color:#ffd700;">${s.points}</td></tr>`).join('');
     }
     setInterval(updateTables, 3600000);
     updateTables();
     
-    // Админ-панель (сокращённая для читаемости)
+    // Админ-панель - добавление товаров, которые увидят ВСЕ пользователи
     const adminPanelContainer = document.createElement('div');
     adminPanelContainer.className = 'admin-panel-container';
     adminPanelContainer.id = 'adminPanelContainer';
     document.body.appendChild(adminPanelContainer);
     
-    function renderAdminPanel() {
-        adminPanelContainer.innerHTML = `<div class="container"><div style="display:flex; justify-content:space-between;"><h1>Админ-панель</h1><button id="closeAdminPanelBtn" style="background:#ef4444; padding:8px 20px; border-radius:40px;">✕ Закрыть</button></div><div class="admin-card"><h3>Управление товарами</h3><div><input id="newProdName" placeholder="Название"><input id="newProdPrice" placeholder="Цена"><button id="addProductAdminBtn">Добавить</button></div><div id="adminProductsList"></div></div></div>`;
-        document.getElementById('adminProductsList').innerHTML = products.map(p => `<div>${p.image} ${p.name} - ${p.price}₽ <button onclick="deleteProductAdmin(${p.id})">🗑️</button></div>`).join('');
-        document.getElementById('closeAdminPanelBtn').onclick = () => adminPanelContainer.classList.remove('open');
-        document.getElementById('addProductAdminBtn').onclick = () => {
-            const name = document.getElementById('newProdName').value.trim();
-            const price = parseInt(document.getElementById('newProdPrice').value);
-            if(name && price) { products.push({id:products.length+1, name, price, image:"🏒"}); saveAll(); renderShop(); renderAdminPanel(); showToast("Товар добавлен"); }
-        };
+    function activateSubscription(type, userId, durationDays) {
+        const expiry = Date.now() + durationDays * 24 * 60 * 60 * 1000;
+        if(type === 'premium') {
+            localStorage.setItem('flypuck_premium', JSON.stringify({active: true, expiry}));
+            if(currentUserId === userId) { isPremium = true; premiumExpiry = expiry; document.getElementById('premiumStatus').innerHTML = `<div style="background:rgba(255,215,0,0.2); padding:8px; border-radius:40px;">⭐ Premium активен до ${new Date(expiry).toLocaleDateString()}</div>`; }
+        } else {
+            localStorage.setItem('flypuck_ultra', JSON.stringify({active: true, expiry}));
+            if(currentUserId === userId) { isUltra = true; ultraExpiry = expiry; document.getElementById('ultraStatus').innerHTML = `<div style="background:rgba(255,215,0,0.2); padding:8px; border-radius:40px;">⚡ Ultra Prime активен до ${new Date(expiry).toLocaleDateString()}</div>`; }
+        }
+        return true;
     }
-    window.deleteProductAdmin = (id) => { products = products.filter(p=>p.id!==id); saveAll(); renderShop(); renderAdminPanel(); showToast("Товар удалён"); };
+    
+    function renderAdminPanel() {
+        const stats = { totalUsers: users.length, totalOrders: orders.length, totalRevenue: orders.reduce((sum,o)=>sum+o.total,0) };
+        adminPanelContainer.innerHTML = `<div class="container"><div style="display:flex; justify-content:space-between; margin-bottom:20px;"><h1><i class="fas fa-shield-alt"></i> Админ-панель FlyPuck37</h1><button id="closeAdminPanelBtn" style="background:#ef4444; padding:8px 20px; border-radius:40px; border:none; color:white; cursor:pointer;">✕ Закрыть</button></div>
+        <div class="admin-card"><h3><i class="fas fa-chart-line"></i> Статистика</h3><p>👥 Пользователей: ${stats.totalUsers} | 📦 Заказов: ${stats.totalOrders} | 💰 Выручка: ${stats.totalRevenue.toLocaleString()} ₽</p></div>
+        <div class="admin-card"><h3><i class="fas fa-tags"></i> ➕ Добавить товар (увидят все пользователи)</h3><div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;"><input id="newProdName" placeholder="Название товара" style="padding:8px; border-radius:30px;"><input id="newProdPrice" type="number" placeholder="Цена" style="padding:8px; border-radius:30px;"><input id="newProdImageUrl" placeholder="Ссылка на фото (URL)" style="padding:8px; border-radius:30px; flex:2;"><button id="addProductAdminBtn" class="btn-primary">➕ Добавить товар</button></div><h3>📋 Список товаров</h3><div id="adminProductsList"></div></div>
+        <div class="admin-card"><h3><i class="fas fa-star-of-life"></i> Заявки на Premium</h3><div id="premiumRequestsList"></div></div>
+        <div class="admin-card"><h3><i class="fas fa-bolt"></i> Заявки на Ultra Prime</h3><div id="ultraRequestsList"></div></div>
+        <div class="admin-card"><h3><i class="fas fa-gift"></i> 🎁 Розыгрыши</h3><div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;"><input id="giveawayTitle" placeholder="Название"><input id="giveawayPrize" placeholder="Приз"><input id="giveawayEndDate" type="date"><button id="addGiveawayBtn" class="btn-primary">➕ Создать</button></div><div id="adminGiveawaysList"></div></div>
+        <div class="admin-card"><h3><i class="fas fa-comment-dots"></i> Отзывы</h3><div id="adminReviewsList"></div></div>
+        <div class="admin-card"><h3><i class="fas fa-donate"></i> Бонусы пользователям</h3><div><input id="bonusUserId" placeholder="ID пользователя"><input id="bonusAmount" placeholder="Сумма бонуса"><button id="addBonusBtn" class="btn-primary">➕ Начислить</button></div></div>
+        </div>`;
+        
+        // Список товаров для админа
+        document.getElementById('adminProductsList').innerHTML = products.map(p => `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid var(--border);"><div style="display:flex; align-items:center; gap:10px;"><img src="${p.imageUrl || 'https://via.placeholder.com/50x50'}" style="width:40px; height:40px; object-fit:cover; border-radius:8px;" onerror="this.src='https://via.placeholder.com/50'"> <strong>${escapeHtml(p.name)}</strong> - ${p.price}₽</div><button onclick="deleteProductAdmin(${p.id})" style="background:#ef4444; color:white; border:none; border-radius:30px; padding:5px 12px; cursor:pointer;">🗑️ Удалить</button></div>`).join('');
+        
+        // Добавление товара - все пользователи увидят его сразу
+        document.getElementById('addProductAdminBtn').onclick = () => { 
+            const name = document.getElementById('newProdName').value.trim(); 
+            const price = parseInt(document.getElementById('newProdPrice').value);
+            let imageUrl = document.getElementById('newProdImageUrl').value.trim();
+            if(!imageUrl) imageUrl = 'https://via.placeholder.com/300x200?text=Хоккей';
+            if(name && !isNaN(price) && price > 0) { 
+                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                products.push({id:newId, name, price, imageUrl}); 
+                saveAll(); 
+                renderShop();   // Обновляем витрину для всех
+                renderAdminPanel(); 
+                showToast(`✅ Товар "${name}" добавлен! Все пользователи видят его.`); 
+                document.getElementById('newProdName').value = '';
+                document.getElementById('newProdPrice').value = '';
+                document.getElementById('newProdImageUrl').value = '';
+            } else showToast("Заполните название и корректную цену");
+        };
+        
+        document.getElementById('premiumRequestsList').innerHTML = premiumRequests.filter(r=>r.status==='pending').map(req => `<div class="request-item"><div><strong>${escapeHtml(req.userName)}</strong> (${req.phone})<br><small>${req.date}</small></div><div><button class="approve-btn" data-id="${req.id}" data-type="premium">✅ Одобрить</button><button class="reject-btn" data-id="${req.id}" data-type="premium">❌ Отклонить</button></div></div>`).join('');
+        document.getElementById('ultraRequestsList').innerHTML = ultraRequests.filter(r=>r.status==='pending').map(req => `<div class="request-item"><div><strong>${escapeHtml(req.userName)}</strong> (${req.phone})<br><small>${req.date}</small></div><div><button class="approve-btn" data-id="${req.id}" data-type="ultra">✅ Одобрить</button><button class="reject-btn" data-id="${req.id}" data-type="ultra">❌ Отклонить</button></div></div>`).join('');
+        document.getElementById('adminGiveawaysList').innerHTML = giveaways.map(g => `<div class="request-item"><div><strong>${escapeHtml(g.title)}</strong><br>🎁 ${escapeHtml(g.prize)}<br>📅 ${new Date(g.endDate).toLocaleDateString()}<br>👥 ${g.participants?.length || 0} уч.${g.winner ? `<br>🏆 ${escapeHtml(g.winner.userName)}` : ''}</div><div>${g.status === 'active' && (!g.winner) && new Date(g.endDate) < new Date() ? `<button class="draw-btn" data-id="${g.id}">🎲 Провести</button>` : ''}<button class="reject-btn" onclick="deleteGiveawayAdmin(${g.id})">🗑️</button></div></div>`).join('');
+        document.getElementById('adminReviewsList').innerHTML = reviews.map(r => `<div class="request-item"><div><strong>${escapeHtml(r.userName)}</strong> ★${r.rating}<br>${escapeHtml(r.text)}<br><small>${r.date}</small></div><div><button class="reject-btn" onclick="deleteReviewAdmin(${r.id})">🗑️ Удалить</button></div></div>`).join('');
+        
+        document.getElementById('addGiveawayBtn').onclick = () => { const title=document.getElementById('giveawayTitle').value.trim(); const prize=document.getElementById('giveawayPrize').value.trim(); const endDate=document.getElementById('giveawayEndDate').value; if(title && prize && endDate) { giveaways.push({id:giveaways.length+1, title, prize, endDate:new Date(endDate).getTime(), participants:[], winner:null, status:'active'}); saveAll(); renderGiveaways(); renderAdminPanel(); showToast("Розыгрыш создан"); } };
+        document.getElementById('addBonusBtn').onclick = () => { const uid=parseInt(document.getElementById('bonusUserId').value); const amount=parseInt(document.getElementById('bonusAmount').value); if(uid && amount && users.find(u=>u.id===uid)) { let cur=parseInt(localStorage.getItem(`flypuck_bonus_user_${uid}`)||'0'); cur+=amount; localStorage.setItem(`flypuck_bonus_user_${uid}`, cur); if(currentUserId===uid) setBonus(cur); showToast(`Бонус +${amount} пользователю ${uid}`); renderAdminPanel(); } };
+        
+        document.querySelectorAll('.approve-btn').forEach(btn=>btn.addEventListener('click',()=>{ const id=parseInt(btn.dataset.id); const type=btn.dataset.type; let req=type==='premium'?premiumRequests.find(r=>r.id===id):ultraRequests.find(r=>r.id===id); if(req){ req.status='approved'; activateSubscription(type, req.userId, 30); saveAll(); showToast(`Заявка ${type} одобрена`); renderAdminPanel(); } }));
+        document.querySelectorAll('.reject-btn').forEach(btn=>{ if(btn.dataset.type) btn.addEventListener('click',()=>{ const id=parseInt(btn.dataset.id); const type=btn.dataset.type; if(type==='premium') premiumRequests=premiumRequests.filter(r=>r.id!==id); else ultraRequests=ultraRequests.filter(r=>r.id!==id); saveAll(); showToast("Заявка отклонена"); renderAdminPanel(); }); });
+        document.querySelectorAll('.draw-btn').forEach(btn=>btn.addEventListener('click',()=>{ drawWinner(parseInt(btn.dataset.id)); renderAdminPanel(); }));
+        document.getElementById('closeAdminPanelBtn').onclick = () => adminPanelContainer.classList.remove('open');
+    }
+    
+    window.deleteProductAdmin = (id) => { 
+        products = products.filter(p=>p.id!==id); 
+        saveAll(); 
+        renderShop();      // Обновляем витрину после удаления
+        renderAdminPanel(); 
+        showToast("Товар удалён"); 
+    };
+    window.deleteReviewAdmin = (id) => { reviews=reviews.filter(r=>r.id!==id); saveAll(); renderReviews(); renderAdminPanel(); showToast("Отзыв удалён"); };
+    window.deleteGiveawayAdmin = (id) => { giveaways=giveaways.filter(g=>g.id!==id); saveAll(); renderGiveaways(); renderAdminPanel(); showToast("Розыгрыш удалён"); };
+    
     document.getElementById('openAdminBtn').onclick = () => { const pwd = prompt("Пароль админа:"); if(pwd === "9797") { renderAdminPanel(); adminPanelContainer.classList.add('open'); } else alert("Неверный пароль!"); };
     
-    // Корзина UI
     const cartIcon=document.getElementById('cartIcon'), cartSidebar=document.getElementById('cartSidebar'), cartOverlay=document.getElementById('cartOverlay'), closeCartBtn=document.getElementById('closeCartBtn');
-    function openCart(){ cartSidebar.classList.add('open'); cartOverlay.classList.add('open'); }
+    function openCart(){ cartSidebar.classList.add('open'); cartOverlay.classList.add('open'); updateCartUI(); }
     function closeCart(){ cartSidebar.classList.remove('open'); cartOverlay.classList.remove('open'); }
     cartIcon.onclick=openCart; closeCartBtn.onclick=closeCart; cartOverlay.onclick=closeCart;
     const profileIcon=document.getElementById('profileIcon'), authModal=document.getElementById('authModal'), closeAuth=document.getElementById('closeAuthModal');
@@ -443,16 +612,14 @@
     closeAuth.onclick=()=>authModal.classList.remove('open');
     authModal.onclick=(e)=>{ if(e.target===authModal) authModal.classList.remove('open'); };
     
-    loadData(); renderShop(); updateCartUI(); renderReviews();
+    loadData(); renderShop(); updateCartUI(); renderReviews(); renderGiveaways();
     const savedId = localStorage.getItem('flypuck_currentUserId');
-    if(savedId){ currentUserId = parseInt(savedId); if(users.find(u=>u.id===currentUserId)) renderAuthModal(); }
+    if(savedId){ currentUserId = parseInt(savedId); if(users.find(u=>u.id===currentUserId)) { renderAuthModal(); const savedBonus = localStorage.getItem(`flypuck_bonus_user_${currentUserId}`); if(savedBonus) setBonus(parseInt(savedBonus)); } }
     if(isPremium) document.getElementById('premiumStatus').innerHTML = `<div style="background:rgba(255,215,0,0.2); padding:8px; border-radius:40px;">⭐ Premium активен до ${new Date(premiumExpiry).toLocaleDateString()}</div>`;
     if(isUltra) document.getElementById('ultraStatus').innerHTML = `<div style="background:rgba(255,215,0,0.2); padding:8px; border-radius:40px;">⚡ Ultra Prime активен до ${new Date(ultraExpiry).toLocaleDateString()}</div>`;
-    // Применяем тему при загрузке
     if(currentTheme === 'hockey') document.body.classList.add('hockey');
     else if(currentTheme === 'dark') document.body.classList.add('dark');
     else document.body.classList.add('light');
 </script>
 </body>
 </html>
- 
